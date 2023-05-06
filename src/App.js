@@ -1,9 +1,9 @@
 import * as React from 'react';
-import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
-import ProTip from './ProTip';
+import { useSettings } from './@core/hooks/useSettings';
+import MainLayout from './@core/layouts/MainLayout';
 
 function Copyright() {
     return (
@@ -19,15 +19,19 @@ function Copyright() {
 }
 
 export default function App() {
+    const { settings } = useSettings()
+
     return (
-        <Container maxWidth="sm">
-            <Box sx={{ my: 4 }}>
+        <MainLayout
+            settings={settings}
+            contentHeightFixed="true"
+        >
+            <Box>
                 <Typography variant="h4" component="h1" gutterBottom>
                     Material UI Create React App example
                 </Typography>
-                <ProTip />
                 <Copyright />
             </Box>
-        </Container>
+        </MainLayout>
     );
 }
