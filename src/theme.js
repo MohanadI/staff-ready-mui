@@ -9,11 +9,12 @@ const theme = createTheme({
         },
         secondary: {
             main: grey[800],
+            dark: "#000000"
         },
         error: {
             main: red.A400,
         },
-    },
+    }
 });
 
 export default theme;
