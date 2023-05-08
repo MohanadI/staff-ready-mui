@@ -6,6 +6,7 @@ import themeConfig from '../configs/themeConfig'
 
 const initialSettings = {
   themeColor: 'primary',
+  activeMenu:{},
   mode: themeConfig.mode,
   skin: themeConfig.skin,
   footer: themeConfig.footer,

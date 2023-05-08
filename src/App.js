@@ -1,26 +1,21 @@
 import * as React from 'react';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import {
-    createBrowserRouter,
-    RouterProvider,
+    BrowserRouter,
+    Routes,
+    Route
 } from "react-router-dom";
-import { useSettings } from './@core/hooks/useSettings';
-import MainLayout from './@core/layouts/MainLayout';
-import { navigation } from './routes';
+import DocumentControl from './modules/document-control';
+import { SettingsProvider } from './@core/context/settingsContext';
 
 export default function App() {
-    const { settings } = useSettings()
-
-    const router = createBrowserRouter(navigation);
-
     return (
-        <MainLayout
-            settings={settings}
-            contentHeightFixed="true"
-        >
-            <RouterProvider router={router} />
-        </MainLayout>
+        <SettingsProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<h1>Home</h1>} />
+                    <Route path="documentcontrol/*" element={<DocumentControl />} />
+                </Routes>
+            </BrowserRouter>
+        </SettingsProvider>
     );
 }

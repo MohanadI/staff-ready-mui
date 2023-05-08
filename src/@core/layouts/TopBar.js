@@ -8,14 +8,15 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 import styled from '@emotion/styled';
 import Logo from "../../assets/images/logo.png"
-
-const pages = ['Products', 'Pricing', 'Blog'];
+import { useSettings } from '../hooks/useSettings';
+import { useNavigate } from "react-router-dom";
 
 function TopBar() {
     const [anchorElNav, setAnchorElNav] = React.useState(null)
+    const { settings } = useSettings();
+    const navigate = useNavigate();
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -47,7 +48,7 @@ function TopBar() {
                     backgroundColor: 'secondary.dark',
                 }}
             >
-                <img src={Logo} alt="logo"/>
+                <img src={Logo} alt="logo" />
             </Box>
             <Toolbar>
                 <Typography
@@ -58,16 +59,15 @@ function TopBar() {
                     sx={{
                         mr: 2,
                         display: { xs: 'none', md: 'flex' },
-                        fontFamily: 'monospace',
                         fontWeight: 700,
                         letterSpacing: '.3rem',
                         color: 'inherit',
                         textDecoration: 'none',
                     }}
                 >
-                    Document Control
+                    {settings.activeMenu?.parent}
                 </Typography>
-
+                {/* Mobile screen menu */}
                 <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                     <IconButton
                         size="large"
@@ -97,41 +97,26 @@ function TopBar() {
                             display: { xs: 'block', md: 'none' },
                         }}
                     >
-                        {pages.map((page) => (
-                            <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">{page}</Typography>
+                        {settings.activeMenu?.children?.map((page) => (
+                            <MenuItem key={page.title} onClick={() => {
+                                navigate(page.path);
+                                handleCloseNavMenu();
+                            }}>
+                                <Typography textAlign="center">{page.title}</Typography>
                             </MenuItem>
                         ))}
                     </Menu>
                 </Box>
-                <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-                <Typography
-                    variant="h5"
-                    noWrap
-                    component="a"
-                    href=""
-                    sx={{
-                        mr: 2,
-                        display: { xs: 'flex', md: 'none' },
-                        flexGrow: 1,
-                        fontFamily: 'monospace',
-                        fontWeight: 700,
-                        letterSpacing: '.3rem',
-                        color: 'inherit',
-                        textDecoration: 'none',
-                    }}
-                >
-                    LOGO
-                </Typography>
+                {/* Desktop screen menu */}
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                    {pages.map((page) => (
+                    {settings.activeMenu?.children?.map((page) => (
                         <Button
                             size='small'
-                            key={page}
-                            onClick={handleCloseNavMenu}
+                            key={page.title}
+                            onClick={() => navigate(page.path)}
                             sx={{ color: 'white', display: 'block' }}
                         >
-                            {page}
+                            {page.title}
                         </Button>
                     ))}
                 </Box>
