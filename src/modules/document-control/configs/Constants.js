@@ -1,5 +1,5 @@
 import Manage from '../pages/Manage';
-import Setup from '../pages/Setup';
+import SetupPage from '../pages/Setup/SetupPage';
 import Archived from '../pages/Archived';
 import Teams from '../pages/Teams';
 import DomainDisabledIcon from '@mui/icons-material/DomainDisabled';
@@ -18,7 +18,7 @@ export const routes = [
         path: "setup",
         title: "Setup",
         icon: <SettingsSuggestIcon />,
-        element: <Setup />
+        element: <SetupPage />
     },
     {
         path: "archived",
