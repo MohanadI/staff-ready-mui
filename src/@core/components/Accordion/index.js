@@ -55,7 +55,7 @@ export default function AccordionComponent({ item }) {
                 <Typography sx={{ color: 'text.secondary' }}>{item.description}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                {item.body}
+                {expanded && item.body}
             </AccordionDetails>
         </Accordion>
     );

@@ -3,8 +3,8 @@ import Skeleton from '@mui/material/Skeleton';
 
 import Context from '../../../Context';
 import AccordionComponent from '../../../../../../../@core/components/Accordion';
-import SubjectDocumentBody from './Body/SubjectDocument';
-import SubjectBody from './Body/Subject';
+import SubjectDocumentBody from './Body/SubjectDocumentBody';
+import SubjectBody from './Body/SubjectBody';
 
 export default function SubjectTemplate() {
     const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +24,7 @@ export default function SubjectTemplate() {
             key: "subject",
             title: "Subject",
             iconApi: "",
-            description: "",
+            description: "ss",
             body: <SubjectBody />
         },
         {

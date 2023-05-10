@@ -50,7 +50,11 @@ function SetupPage() {
         >
             <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={2}>
-                    <Grid item xs={3}></Grid>
+                    <Grid item xs={3}>
+                        {/* Tabs Component */}
+                        {/* Add Button */}
+                        {/* Tree Component */}
+                    </Grid>
                     <Grid item xs={9}>
                         <Typography variant="h5" gutterBottom>
                             Subject Name
