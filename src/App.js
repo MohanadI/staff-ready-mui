@@ -7,7 +7,42 @@ import {
 import DocumentControl from './modules/document-control';
 import { SettingsProvider } from './@core/context/settingsContext';
 
+
+
 export default function App() {
+
+    const cols = [
+        {
+            field: 'name',
+            headerName: 'Document Name',
+            flex: 1,
+            // renderCell: renderCell
+
+        },
+        {
+            field: 'id',
+            flex: 1,
+            headerName: 'Classification',
+            // renderCell: renderCell
+
+
+        },
+        {
+            field: 'subject',
+            headerName: 'Subject',
+            flex: 1,
+            labelField: 'id',
+
+        },
+        {
+            field: 'description',
+            headerName: 'Description',
+            flex: 1,
+            // renderCell: renderCell
+        },
+    ];
+
+
     return (
         <SettingsProvider>
             <BrowserRouter>
