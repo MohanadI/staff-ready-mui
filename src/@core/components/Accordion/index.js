@@ -4,6 +4,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
 
 const Accordion = styled((props) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -31,16 +32,18 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
     borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
-export default function AccordionComponent({ item, expanded, setExpanded }) {
-    const handleChange = (panel) => (event, isExpanded) => {
-        setExpanded(isExpanded ? panel : false);
+export default function AccordionComponent({ item }) {
+    const [expanded, setExpanded] = useState(false);
+
+    const handleChange = (flag) => {
+        setExpanded(flag);
     };
 
     return (
         <Accordion
             sx={{ mb: 2 }}
-            expanded={expanded === item.key}
-            onChange={handleChange(item.key)}>
+            expanded={expanded}
+            onChange={() => handleChange(!expanded)}>
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls={item.key + "-content"}
@@ -49,13 +52,10 @@ export default function AccordionComponent({ item, expanded, setExpanded }) {
                 <Typography sx={{ width: '33%', flexShrink: 0 }}>
                     {item.title}
                 </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>I am an accordion</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{item.description}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <Typography>
-                    Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
-                    Aliquam eget maximus est, id dignissim quam.
-                </Typography>
+                {item.body}
             </AccordionDetails>
         </Accordion>
     );
