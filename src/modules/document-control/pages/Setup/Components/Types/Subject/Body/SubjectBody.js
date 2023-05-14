@@ -85,7 +85,7 @@ export default function SubjectBody() {
         </Grid>
         <Grid item xs></Grid>
         <Grid xs={12}>
-          <CardContent>
+          <CardContent sx={{padding: "8px"}}>
             <Typography
               sx={{ fontSize: 14 }}
               color="text.secondary"
