@@ -118,9 +118,7 @@ function TopBar() {
               key={page.title}
               onClick={() => navigate(page.path)}
               sx={{
-                color: "white",
-                display: "block",
-                textTransform: "uppercase",
+                color: "white"
               }}
             >
               {page.title}

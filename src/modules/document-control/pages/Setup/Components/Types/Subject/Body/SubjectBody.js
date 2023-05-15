@@ -9,6 +9,7 @@ import {
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import { Feedback, Help, VerifiedUser } from "@mui/icons-material";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import styled from "@emotion/styled";
 
 import Button from "@mui/material/Button";
@@ -67,7 +68,10 @@ export default function SubjectBody() {
               horizontal: "center",
             }}
           >
-            <Typography sx={{ p: 2 }}>Subject</Typography>
+            <Typography variant="body1" sx={{ p: 2, fontSize: "13px" }}>
+              This color bar allows you to edit the document subject ID or edit
+              what parent folder it is a part of.
+            </Typography>
           </Popover>
           <IconButton
             aria-describedby={id}
@@ -119,9 +123,8 @@ export default function SubjectBody() {
                 onClick={() => setEditing(true)}
                 variant="outlined"
                 color="info"
-                size="small"
               >
-                [top] | Change Parent
+                [top]
               </Button>
             ) : (
               <Typography variant="subtitle1" component="div">
@@ -140,7 +143,12 @@ export default function SubjectBody() {
                 >
                   Edit
                 </Button>
-                <Button variant="outlined" color="secondary" size="small">
+                <Button
+                  variant="outlined"
+                  startIcon={<CloudDownloadIcon />}
+                  color="secondary"
+                  size="small"
+                >
                   Download All Files As ZIP
                 </Button>
               </>
