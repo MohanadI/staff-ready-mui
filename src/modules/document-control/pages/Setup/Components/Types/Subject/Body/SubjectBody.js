@@ -13,17 +13,19 @@ import styled from "@emotion/styled";
 
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import ConfirmNotification from "../../../../../../../../@core/components/confirm-dialog";
 
 const IconButton = styled((props) => (
   <MuiIconButton color="default" {...props} />
 ))(() => ({
   backgroundColor: "#f8f8f8",
-  marginRight: 1,
+  marginRight: 10,
 }));
 
 export default function SubjectBody() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isEditing, setEditing] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   useEffect(() => {
     // set is loading
@@ -85,7 +87,7 @@ export default function SubjectBody() {
         </Grid>
         <Grid item xs></Grid>
         <Grid xs={12}>
-          <CardContent sx={{padding: "8px"}}>
+          <CardContent sx={{ padding: "8px" }}>
             <Typography
               sx={{ fontSize: 14 }}
               color="text.secondary"
@@ -96,7 +98,6 @@ export default function SubjectBody() {
             {isEditing ? (
               <TextField
                 id="outlined-basic"
-                label="Subject Name"
                 variant="outlined"
                 size="small"
                 sx={{ mb: 2 }}
@@ -162,7 +163,7 @@ export default function SubjectBody() {
                   Save
                 </Button>
                 <Button
-                  onClick={() => setEditing(false)}
+                  onClick={() => setConfirmDelete(true)}
                   variant="outlined"
                   color="error"
                   size="small"
@@ -174,6 +175,13 @@ export default function SubjectBody() {
           </CardActions>
         </Grid>
       </Grid>
+      <ConfirmNotification
+        open={confirmDelete}
+        setCallback={(value) => {
+          console.log(value);
+          setConfirmDelete(false);
+        }}
+      />
     </Fragment>
   );
 }

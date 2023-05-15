@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from "react";
 
 import Context from "../../../Context";
-import AccordionComponent from "../../../../../../../@core/components/Accordion";
+import AccordionComponent from "../../../../../../../@core/components/accordion";
 import SubjectDocumentBody from "./Body/SubjectDocumentBody";
 import SubjectBody from "./Body/SubjectBody";
 
@@ -34,6 +34,8 @@ export default function SubjectTemplate() {
       body: <SubjectDocumentBody />,
     },
   ];
+
+  console.log(subjectID);
   return (
     <>
       {panels.map((item) => (
