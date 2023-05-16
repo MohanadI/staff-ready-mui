@@ -1,12 +1,9 @@
 export const search_container_style = {
     // flexGrow: 1,
-    mb: 2,
-    ml: 1.5
+    mb: 2
 };
 
 export const tree_wrapper = {
-    height: '77vh',
-    overflow: 'scroll'
 
 }
 

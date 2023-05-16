@@ -16,12 +16,14 @@ const StyledTab = styled(Button)(({ theme, active, tabIdx, tabsCount }) => {
     }
 
     return {
+        padding: "5px 7px",
         [`&.${buttonClasses.root}`]: {
             flexGrow: active === 'true' ? 2 : 1,
             borderRadius: '0',
             ...tabBorder,
             ".tab-text": {
-                fontSize: '12px',
+                fontSize: '13px',
+                fontWeight: "600",
                 whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis',
                 overflow: 'hidden',
