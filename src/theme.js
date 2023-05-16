@@ -24,7 +24,8 @@ const theme = createTheme({
           fontSize: "0.85rem",
           textTransform: "none",
           padding: "2px 6px",
-        },
+
+        }
       },
     },
     MuiInputBase: {
