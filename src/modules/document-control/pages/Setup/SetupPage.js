@@ -61,18 +61,18 @@ function SetupPage() {
     >
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={3} md={3} lg={3}>
+          <Grid item xs={12} sm={3} md={3} lg={2}>
             <Box sx={{ mb: 1, width: "100%" }}>
               <CustomTabs tabsConfig={setupTabs} />
             </Box>
             <Grid item xs={12} sx={{ mb: 1.5 }}>
-              <Button variant="contained" sx={{ width: "100%", padding: "6px 16px" }}>
+              <Button variant="outlined" size="small" sx={{ width: "100%" }}>
                 Add
               </Button>
             </Grid>
             <CustomTree data={treeData} tabsConfig={setupTabs} />
           </Grid>
-          <Grid item xs={12} sm={9} md={9} lg={9}>
+          <Grid item xs={12} sm={9} md={9} lg={10}>
             <Typography variant="h5" gutterBottom>
               Subject Name
             </Typography>

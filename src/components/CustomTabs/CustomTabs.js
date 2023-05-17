@@ -37,11 +37,11 @@ const CustomTabs = (props) => {
             title={tab.name}
             active={tab.active.toString()}
             size="small"
-            variant="outlined"
+            variant="contained"
             onClick={() => onChange(tab.name, idx)}
             startIcon={tab.icon}
-            tabsCount={tabsConfig.length}
-            tabIdx={idx}
+            tabscount={tabsConfig.length}
+            tabidx={idx}
           >
             {tab.active ? (
               <Typography display={"inline-block"} className={"tab-text"}>

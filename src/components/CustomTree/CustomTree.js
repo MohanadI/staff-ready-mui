@@ -123,7 +123,7 @@ const CustomTree = (props) => {
     <Box sx={tree_wrapper}>
       <Box sx={search_container_style}>
         <Grid container spacing={1}>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={9}>
             <TextField
               size="small"
               onChange={onSearch}
@@ -131,9 +131,9 @@ const CustomTree = (props) => {
               sx={{ width: "100%" }}
             />
           </Grid>
-          <Grid item xs={12} md={2}>
+          <Grid item xs={12} md={3}>
             <Button
-              sx={{ width: "100%", height: "100%" }}
+              sx={{ minWidth: "100%", height: "100%" }}
               size="small"
               variant="outlined"
               onClick={resetSearch}
@@ -149,7 +149,6 @@ const CustomTree = (props) => {
         defaultExpandIcon={<ChevronRightIcon />}
         expanded={expandedIds}
         onNodeToggle={(e, nodeIds) => setExpanedIds(nodeIds)}
-        sx={{ maxWidth: 200 }}
         classes={{ root: "my-custom-tree-view" }} // add classes prop here
       >
         {renderData(TreeData, 1)}
