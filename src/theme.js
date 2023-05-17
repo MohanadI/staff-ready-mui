@@ -48,7 +48,7 @@ const theme = createTheme({
           textOverflow: "ellipsis",
         },
       },
-    },
+    }
   },
 });
 
