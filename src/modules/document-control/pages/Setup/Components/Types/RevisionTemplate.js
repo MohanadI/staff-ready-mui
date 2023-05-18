@@ -21,8 +21,10 @@ export default function RevisionTemplate() {
     {
       key: "revision",
       title: "Revision",
-      iconApi: "",
-      description: "ss",
+      module: "documentcontrol",
+      id: "revision",
+      pk: setupPageData.selectedNode.value,
+      description: "",
       body: <h1>asdasd</h1>,
     },
   ];

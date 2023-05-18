@@ -1,8 +1,5 @@
-import { useEffect, useState } from "react";
-import {
-  search_container_style,
-  tree_wrapper
-} from "./Style.js";
+import { useContext, useEffect, useState } from "react";
+import { search_container_style, tree_wrapper } from "./Style.js";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
@@ -10,19 +7,20 @@ import TreeView from "@mui/lab/TreeView";
 import StyledTreeItem from "./StyledComponets/StyledTreeItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import TreeData from "./Data";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { CircularProgress } from "@mui/material";
 
 const CustomTree = (props) => {
   const [treeData, setTreeData] = useState([]);
   const [searchVal, setSearchVal] = useState("");
-  const [expandedIds, setExpanedIds] = useState([]);
+  const [expandedIds, setExpandedIds] = useState([]);
+  const { handleContextDataChange } = useContext(props.context);
 
   useEffect(() => {
     setTreeData(props.data);
-  }, []);
+  }, [props.data]);
 
   const renderData = (TreeData, level) => {
     return TreeData.map((node) => {
@@ -36,7 +34,7 @@ const CustomTree = (props) => {
         const searchTextIdx = node.text
           .toUpperCase()
           .indexOf(searchVal.toUpperCase().trim());
-        const textBeginig = node.text.slice(0, searchTextIdx);
+        const textBeginning = node.text.slice(0, searchTextIdx);
         const textEnding = node.text.slice(
           searchTextIdx + searchVal.trim().length
         );
@@ -46,11 +44,11 @@ const CustomTree = (props) => {
         );
         label = (
           <Box>
-            {textBeginig}
+            {textBeginning}
             <Typography
               variant="body1"
               display={"inline-block"}
-              sx={{ color: "#f50" }}
+              sx={{ color: "#f50", fontSize: "13px" }}
             >
               {searchText}
             </Typography>
@@ -65,6 +63,7 @@ const CustomTree = (props) => {
             level={level}
             key={node.value}
             nodeId={node.value}
+            node={node}
             label={label}
           >
             {renderData(node.children, level + 1)}
@@ -76,6 +75,7 @@ const CustomTree = (props) => {
           level={level}
           key={node.value}
           nodeId={node.value}
+          node={node}
           label={label}
         />
       );
@@ -110,13 +110,31 @@ const CustomTree = (props) => {
     const matchedIds = [];
     searchTree(treeData, null, _searchVal, matchedIds);
 
-    setExpanedIds(matchedIds);
+    setExpandedIds(matchedIds);
     setSearchVal(value);
   };
 
   const resetSearch = () => {
     setSearchVal("");
     onSearch({ target: { value: "" } });
+  };
+
+  const findObjectById = (objects, id) => {
+    let match = objects.find((obj) => obj.value === id);
+    if (match) {
+      return match;
+    }
+
+    for (const obj of objects) {
+      if (obj.children && obj.children.length > 0) {
+        match = findObjectById(obj.children, id);
+        if (match) {
+          return match;
+        }
+      }
+    }
+
+    return null;
   };
 
   return (
@@ -143,16 +161,27 @@ const CustomTree = (props) => {
           </Grid>
         </Grid>
       </Box>
-      <TreeView
-        aria-label="file system navigator"
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-        expanded={expandedIds}
-        onNodeToggle={(e, nodeIds) => setExpanedIds(nodeIds)}
-        classes={{ root: "my-custom-tree-view" }} // add classes prop here
-      >
-        {renderData(TreeData, 1)}
-      </TreeView>
+
+      {props.isLoading ? (
+        <div style={{ textAlign: "center" }}>
+          <CircularProgress size={25} />
+        </div>
+      ) : (
+        <TreeView
+          aria-label="file system navigator"
+          defaultCollapseIcon={<ExpandMoreIcon />}
+          defaultExpandIcon={<ChevronRightIcon />}
+          expanded={expandedIds}
+          onNodeSelect={(e, node) => {
+            const match = findObjectById(treeData, node);
+            handleContextDataChange(match, "selectedNode");
+          }}
+          onNodeToggle={(e, nodeIds) => setExpandedIds(nodeIds)}
+          classes={{ root: "my-custom-tree-view" }} // add classes prop here
+        >
+          {renderData(treeData, 1)}
+        </TreeView>
+      )}
     </Box>
   );
 };

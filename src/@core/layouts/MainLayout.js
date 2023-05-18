@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import Box from "@mui/material/Box";
 
 // ** Icon Imports
-import Icon from "../components/icon";
+import Icon from "../components/icon/IconifyIcon";
 
 // ** Theme Config Import
 import themeConfig from "../configs/themeConfig";

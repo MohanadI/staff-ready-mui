@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import StyledTab from "./StyledComponent/StyledTab";
 import Box from "@mui/material/Box";
 import cloneDeep from "lodash/cloneDeep";
@@ -8,6 +8,7 @@ const CustomTabs = (props) => {
   const [tabVal, setTabVal] = useState(0);
   const [activeTabLabel, setActiveTabLabel] = useState("");
   const [tabsConfig, setTabsConfig] = useState([]);
+  const { handleContextDataChange } = useContext(props.context)
   // const [activeTab, setActiveTab] = useState(tabsConfig[0].name);
 
   useEffect(() => {
@@ -17,6 +18,7 @@ const CustomTabs = (props) => {
   }, [props.tabsConfig]);
 
   const onChange = (tabName, tabIdx) => {
+    handleContextDataChange(tabName, "activeTab");
     // setActiveTab(tabName)
     const _tabsConfig = cloneDeep(tabsConfig);
     _tabsConfig.forEach((tab) => {

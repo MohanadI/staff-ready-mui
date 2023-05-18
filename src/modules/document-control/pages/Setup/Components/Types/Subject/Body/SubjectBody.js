@@ -90,7 +90,7 @@ export default function SubjectBody() {
           </IconButton>
         </Grid>
         <Grid item xs></Grid>
-        <Grid xs={12}>
+        <Grid item xs={12}>
           <CardContent sx={{ padding: "8px" }}>
             <Typography
               sx={{ fontSize: 14 }}

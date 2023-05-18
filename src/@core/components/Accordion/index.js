@@ -5,7 +5,7 @@ import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
-import { Icon } from "@iconify/react";
+import StatusIcon from "../icon/StatusIcon";
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -41,6 +41,7 @@ export default function AccordionComponent({ item, isLoading }) {
   return (
     <Accordion
       sx={{ mb: 2 }}
+      key={item.key}
       expanded={expanded}
       onChange={() => handleChange(!expanded)}
     >
@@ -49,13 +50,7 @@ export default function AccordionComponent({ item, isLoading }) {
         aria-controls={item.key + "-content"}
         id={item.key + "-header"}
       >
-        <Icon
-          className="accordion-icon"
-          color="green"
-          icon="ic:baseline-check"
-          width="30"
-          height="25"
-        />
+        <StatusIcon key={item.pk} module={item.module} id={item.id} pk={item.pk} />
         <Typography sx={{ width: "33%", flexShrink: 0 }}>
           {isLoading ? "Loading..." : item.title}
         </Typography>

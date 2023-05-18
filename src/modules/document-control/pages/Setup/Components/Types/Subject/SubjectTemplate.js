@@ -4,8 +4,9 @@ import Context from "../../../Context";
 import AccordionComponent from "../../../../../../../@core/components/Accordion";
 import SubjectDocumentBody from "./Body/SubjectDocumentBody";
 import SubjectBody from "./Body/SubjectBody";
+import withAPI from "../../../../../../../api/core";
 
-export default function SubjectTemplate() {
+function SubjectTemplate({ api }) {
   const [isLoading, setIsLoading] = useState(false);
   const [subjectID, setSubjectID] = useState(null);
   const { setupPageData } = useContext(Context);
@@ -22,20 +23,25 @@ export default function SubjectTemplate() {
     {
       key: "subject",
       title: "Subject",
-      iconApi: "",
+      module: "documentcontrol",
+      id: "subject",
+      pk: setupPageData.selectedNode.value,
       description: "ss",
       body: <SubjectBody />,
     },
     {
       key: "subject_documents",
       title: "Subject Documents",
-      iconApi: "",
+      module: "documentcontrol",
+      id: "subject",
+      pk: setupPageData.selectedNode.value,
+      description: "ss",
       description: "",
       body: <SubjectDocumentBody />,
     },
   ];
 
-  console.log(subjectID);
+  console.log(setupPageData, "setupPageData");
   return (
     <>
       {panels.map((item) => (
@@ -44,3 +50,5 @@ export default function SubjectTemplate() {
     </>
   );
 }
+
+export default withAPI(SubjectTemplate)
