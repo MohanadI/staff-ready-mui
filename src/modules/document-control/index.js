@@ -15,9 +15,9 @@ function DocumentControl() {
     }, []);
 
     return (
-        <MainLayout settings={settings}>
-            <DocumentControlRoutes />
-        </MainLayout>
+      <MainLayout settings={settings} contentHeightFixed="true">
+        <DocumentControlRoutes />
+      </MainLayout>
     );
 }
 

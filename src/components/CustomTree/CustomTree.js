@@ -11,12 +11,15 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { CircularProgress } from "@mui/material";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import useWindowSize from "../../@core/hooks/useWindowSize.js";
 
 const CustomTree = (props) => {
   const [treeData, setTreeData] = useState([]);
   const [searchVal, setSearchVal] = useState("");
   const [expandedIds, setExpandedIds] = useState([]);
   const { handleContextDataChange } = useContext(props.context);
+  const { height } = useWindowSize();
 
   useEffect(() => {
     setTreeData(props.data);
@@ -161,27 +164,28 @@ const CustomTree = (props) => {
           </Grid>
         </Grid>
       </Box>
-
-      {props.isLoading ? (
-        <div style={{ textAlign: "center" }}>
-          <CircularProgress size={25} />
-        </div>
-      ) : (
-        <TreeView
-          aria-label="file system navigator"
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
-          expanded={expandedIds}
-          onNodeSelect={(e, node) => {
-            const match = findObjectById(treeData, node);
-            handleContextDataChange(match, "selectedNode");
-          }}
-          onNodeToggle={(e, nodeIds) => setExpandedIds(nodeIds)}
-          classes={{ root: "my-custom-tree-view" }} // add classes prop here
-        >
-          {renderData(treeData, 1)}
-        </TreeView>
-      )}
+      <PerfectScrollbar style={{ height: height - 250}}>
+        {props.isLoading ? (
+          <div style={{ textAlign: "center" }}>
+            <CircularProgress size={25} />
+          </div>
+        ) : (
+          <TreeView
+            aria-label="file system navigator"
+            defaultCollapseIcon={<ExpandMoreIcon />}
+            defaultExpandIcon={<ChevronRightIcon />}
+            expanded={expandedIds}
+            onNodeSelect={(e, node) => {
+              const match = findObjectById(treeData, node);
+              handleContextDataChange(match, "selectedNode");
+            }}
+            onNodeToggle={(e, nodeIds) => setExpandedIds(nodeIds)}
+            classes={{ root: "my-custom-tree-view" }} // add classes prop here
+          >
+            {renderData(treeData, 1)}
+          </TreeView>
+        )}
+      </PerfectScrollbar>
     </Box>
   );
 };

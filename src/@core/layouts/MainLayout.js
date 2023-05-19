@@ -40,11 +40,14 @@ const ContentWrapper = styled("main")(({ theme }) => ({
 
 const MainLayout = (props) => {
   // ** Props
-  const { children, scrollToTop } = props;
+  const { children, scrollToTop, contentHeightFixed } = props;
 
   return (
     <HorizontalLayoutWrapper className="layout-wrapper">
-      <MainContentWrapper className="layout-content-wrapper">
+      <MainContentWrapper
+        className="layout-content-wrapper"
+        sx={{ ...(contentHeightFixed && { maxHeight: "100vh" }) }}
+      >
         {/* Navbar */}
         <TopBar />
 

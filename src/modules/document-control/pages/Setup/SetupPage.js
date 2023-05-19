@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { Button, Divider, LinearProgress } from "@mui/material";
+import PerfectScrollbar from "react-perfect-scrollbar";
 
 import Context from "./Context";
 import DocumentsTemplate from "./Components/Types/DocumentsTemplate";
@@ -16,10 +17,12 @@ import CustomTree from "../../../../components/CustomTree/CustomTree";
 import CustomTabs from "../../../../components/CustomTabs/CustomTabs";
 import { setupTabs } from "../../configs/TabsConstant";
 import withAPI from "../../../../api/core";
+import useWindowSize from "../../../../@core/hooks/useWindowSize";
 
 function SetupPage({ api }) {
   const [template, setTemplate] = useState(<h1>No Template</h1>);
   const [isLoading, setIsLoading] = useState(false);
+  const { height } = useWindowSize();
   const [setupPageData, setSetupPageData] = useState({
     activeTab: "subject",
     selectedNode: {
@@ -102,7 +105,9 @@ function SetupPage({ api }) {
               </Typography>
             )}
             <Divider sx={{ mb: 2 }} />
-            {template}
+            <PerfectScrollbar style={{ height: height - 200, paddingRight: 10 }}>
+              {template}
+            </PerfectScrollbar>
           </Grid>
         </Grid>
       </Box>

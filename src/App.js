@@ -44,13 +44,13 @@ export default function App() {
 
 
     return (
-        <SettingsProvider>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<h1>Home</h1>} />
-                    <Route path="documentcontrol/*" element={<DocumentControl />} />
-                </Routes>
-            </BrowserRouter>
-        </SettingsProvider>
+      <SettingsProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<h1>Home</h1>} />
+            <Route path="documentcontrol/*" element={<DocumentControl />} />
+          </Routes>
+        </BrowserRouter>
+      </SettingsProvider>
     );
 }
