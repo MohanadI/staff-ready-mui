@@ -20,14 +20,14 @@ import withAPI from "../../../../api/core";
 import useWindowSize from "../../../../@core/hooks/useWindowSize";
 
 function SetupPage({ api }) {
-  const [template, setTemplate] = useState(<h1>No Template</h1>);
+  const [template, setTemplate] = useState(<></>);
   const [isLoading, setIsLoading] = useState(false);
   const { height } = useWindowSize();
   const [setupPageData, setSetupPageData] = useState({
     activeTab: "subject",
     selectedNode: {
-      type: "subject",
-      value: "10",
+      type: "",
+      value: null,
     },
     treeData: [],
   });
@@ -60,9 +60,11 @@ function SetupPage({ api }) {
   }, [setupPageData.activeTab]);
 
   useEffect(() => {
-    const tempTemplate =
-      DocumentControlTemplates[setupPageData.selectedNode?.type];
-    setTemplate(tempTemplate);
+    if (setupPageData.selectedNode?.type) {
+      const tempTemplate =
+        DocumentControlTemplates[setupPageData.selectedNode?.type];
+      setTemplate(tempTemplate);
+    }
   }, [setupPageData.selectedNode]);
 
   const handleContextDataChange = (value, key) => {
@@ -105,7 +107,9 @@ function SetupPage({ api }) {
               </Typography>
             )}
             <Divider sx={{ mb: 2 }} />
-            <PerfectScrollbar style={{ height: height - 200, paddingRight: 10 }}>
+            <PerfectScrollbar
+              style={{ height: height - 200, paddingRight: 10 }}
+            >
               {template}
             </PerfectScrollbar>
           </Grid>
