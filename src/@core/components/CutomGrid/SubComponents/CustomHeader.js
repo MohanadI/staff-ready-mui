@@ -3,11 +3,11 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import cloneDeep from 'lodash/cloneDeep';
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import SortingComp from './SortingComp';
 
 
-function CustomHeader(props) {
+const CustomHeader = forwardRef((props, ref) => {
 
     const [searchPatternArr, setSearchPatternArr] = useState([]);
     const [isActiveSort, setIsActiveSort] = useState([]);
@@ -72,7 +72,7 @@ function CustomHeader(props) {
         </Box >
     )
 
-}
+})
 
 
 export default CustomHeader;

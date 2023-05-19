@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, forwardRef } from 'react';
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 
@@ -6,13 +6,15 @@ import CustomHeader from './SubComponents/CustomHeader';
 
 
 
-export const CustomGrid = ({ rows, columns, ...others }) => {
+export const CustomGrid = forwardRef(({ rows, columns, ...others }, ref) => {
 
     const [_rows, setRows] = useState(rows);
     const [filteredRows, setFilteredRows] = useState([])
     const [_columns, setColumns] = useState(columns);
 
     const apiRef = useGridApiRef();
+    const pageSizeOptions = [10, 12, 15, 20, 30]
+
 
     useEffect(() => {
 
@@ -74,10 +76,11 @@ export const CustomGrid = ({ rows, columns, ...others }) => {
                     pagination: { paginationModel: { pageSize: 12 } }
                 }}
                 apiRef={apiRef}
+                pageSizeOptions={pageSizeOptions}
                 {...others}
             />
         </Box>
     )
-}
+})
 
 export default CustomGrid;

@@ -13,106 +13,106 @@ import ClassificationTemplate from "./Components/Types/ClassificationTemplate";
 import SiteTemplate from "./Components/Types/SiteTemplate";
 import LocationTemplate from "./Components/Types/LocationTemplate";
 import SubjectTemplate from "./Components/Types/Subject/SubjectTemplate";
-import CustomTree from "../../../../components/CustomTree/CustomTree";
-import CustomTabs from "../../../../components/CustomTabs/CustomTabs";
+import CustomTree from "../../../../@core/components/CustomTree/CustomTree";
+import CustomTabs from "../../../../@core/components/CustomTabs/CustomTabs";
 import { setupTabs } from "../../configs/TabsConstant";
 import withAPI from "../../../../api/core";
 import useWindowSize from "../../../../@core/hooks/useWindowSize";
 
 function SetupPage({ api }) {
-  const [template, setTemplate] = useState(<h1>No Template</h1>);
-  const [isLoading, setIsLoading] = useState(false);
-  const { height } = useWindowSize();
-  const [setupPageData, setSetupPageData] = useState({
-    activeTab: "subject",
-    selectedNode: {
-      type: "subject",
-      value: "10",
-    },
-    treeData: [],
-  });
+    const [template, setTemplate] = useState(<h1>No Template</h1>);
+    const [isLoading, setIsLoading] = useState(false);
+    const { height } = useWindowSize();
+    const [setupPageData, setSetupPageData] = useState({
+        activeTab: "subject",
+        selectedNode: {
+            type: "subject",
+            value: "10",
+        },
+        treeData: [],
+    });
 
-  const DocumentControlTemplates = {
-    subject: <SubjectTemplate />,
-    document: <DocumentsTemplate />,
-    revision: <RevisionTemplate />,
-    classification_folder: <ClassificationFolderTemplate />,
-    classification: <ClassificationTemplate />,
-    site: <SiteTemplate />,
-    location: <LocationTemplate />,
-  };
+    const DocumentControlTemplates = {
+        subject: <SubjectTemplate />,
+        document: <DocumentsTemplate />,
+        revision: <RevisionTemplate />,
+        classification_folder: <ClassificationFolderTemplate />,
+        classification: <ClassificationTemplate />,
+        site: <SiteTemplate />,
+        location: <LocationTemplate />,
+    };
 
-  useEffect(() => {
-    if (setupPageData.activeTab) {
-      setIsLoading(true);
-      handleContextDataChange([], "treeData");
-      api.get(
-        "StaffReady/v10/api/tree/" + setupPageData.activeTab + "/documents",
-        (results) => {
-          const tempData = { ...setupPageData };
-          tempData["treeData"] = results;
-          tempData["selectedNode"] = results.length > 0 ? results[0] : {};
-          setSetupPageData(tempData);
-          setIsLoading(false);
+    useEffect(() => {
+        if (setupPageData.activeTab) {
+            setIsLoading(true);
+            handleContextDataChange([], "treeData");
+            api.get(
+                "StaffReady/v10/api/tree/" + setupPageData.activeTab + "/documents",
+                (results) => {
+                    const tempData = { ...setupPageData };
+                    tempData["treeData"] = results;
+                    tempData["selectedNode"] = results.length > 0 ? results[0] : {};
+                    setSetupPageData(tempData);
+                    setIsLoading(false);
+                }
+            );
         }
-      );
-    }
-  }, [setupPageData.activeTab]);
+    }, [setupPageData.activeTab]);
 
-  useEffect(() => {
-    const tempTemplate =
-      DocumentControlTemplates[setupPageData.selectedNode?.type];
-    setTemplate(tempTemplate);
-  }, [setupPageData.selectedNode]);
+    useEffect(() => {
+        const tempTemplate =
+            DocumentControlTemplates[setupPageData.selectedNode?.type];
+        setTemplate(tempTemplate);
+    }, [setupPageData.selectedNode]);
 
-  const handleContextDataChange = (value, key) => {
-    const tempData = { ...setupPageData };
-    tempData[key] = value;
-    setSetupPageData(tempData);
-  };
+    const handleContextDataChange = (value, key) => {
+        const tempData = { ...setupPageData };
+        tempData[key] = value;
+        setSetupPageData(tempData);
+    };
 
-  return (
-    <Context.Provider
-      value={{
-        setupPageData,
-        handleContextDataChange,
-      }}
-    >
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={3} md={3} lg={2}>
-            <Box sx={{ mb: 1, width: "100%" }}>
-              <CustomTabs tabsConfig={setupTabs} context={Context} />
+    return (
+        <Context.Provider
+            value={{
+                setupPageData,
+                handleContextDataChange,
+            }}
+        >
+            <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={3} md={3} lg={2}>
+                        <Box sx={{ mb: 1, width: "100%" }}>
+                            <CustomTabs tabsConfig={setupTabs} context={Context} />
+                        </Box>
+                        <Grid item xs={12} sx={{ mb: 1.5 }}>
+                            <Button variant="outlined" size="small" sx={{ width: "100%" }}>
+                                Add
+                            </Button>
+                        </Grid>
+                        <CustomTree
+                            data={setupPageData.treeData}
+                            isLoading={isLoading}
+                            tabsConfig={setupTabs}
+                            context={Context}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={9} md={9} lg={10}>
+                        {isLoading ? (
+                            <LinearProgress />
+                        ) : (
+                            <Typography variant="h5" gutterBottom>
+                                {setupPageData.selectedNode?.text}
+                            </Typography>
+                        )}
+                        <Divider sx={{ mb: 2 }} />
+                        <PerfectScrollbar style={{ height: height - 200, paddingRight: 10 }}>
+                            {template}
+                        </PerfectScrollbar>
+                    </Grid>
+                </Grid>
             </Box>
-            <Grid item xs={12} sx={{ mb: 1.5 }}>
-              <Button variant="outlined" size="small" sx={{ width: "100%" }}>
-                Add
-              </Button>
-            </Grid>
-            <CustomTree
-              data={setupPageData.treeData}
-              isLoading={isLoading}
-              tabsConfig={setupTabs}
-              context={Context}
-            />
-          </Grid>
-          <Grid item xs={12} sm={9} md={9} lg={10}>
-            {isLoading ? (
-              <LinearProgress />
-            ) : (
-              <Typography variant="h5" gutterBottom>
-                {setupPageData.selectedNode?.text}
-              </Typography>
-            )}
-            <Divider sx={{ mb: 2 }} />
-            <PerfectScrollbar style={{ height: height - 200, paddingRight: 10 }}>
-              {template}
-            </PerfectScrollbar>
-          </Grid>
-        </Grid>
-      </Box>
-    </Context.Provider>
-  );
+        </Context.Provider>
+    );
 }
 
 export default withAPI(SetupPage);

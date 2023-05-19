@@ -41,7 +41,6 @@ function SubjectTemplate({ api }) {
     },
   ];
 
-  console.log(setupPageData, "setupPageData");
   return (
     <>
       {panels.map((item) => (

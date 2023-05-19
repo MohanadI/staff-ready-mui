@@ -4,7 +4,7 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
 import TreeView from "@mui/lab/TreeView";
-import StyledTreeItem from "./StyledComponets/StyledTreeItem";
+import StyledTreeItem from "./StyledComponets/StyledTreeItem.js";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import TextField from "@mui/material/TextField";
@@ -12,7 +12,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { CircularProgress } from "@mui/material";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import useWindowSize from "../../@core/hooks/useWindowSize.js";
+import useWindowSize from "../../hooks/useWindowSize.js";
 
 const CustomTree = (props) => {
   const [treeData, setTreeData] = useState([]);
@@ -138,6 +138,7 @@ const CustomTree = (props) => {
         </Grid>
       </Box>
       <PerfectScrollbar style={{ height: height - 250 }}>
+
         {props.isLoading ? (
           <div style={{ textAlign: "center" }}>
             <CircularProgress size={25} />
