@@ -4,7 +4,7 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
 import TreeView from "@mui/lab/TreeView";
-import StyledTreeItem from "./StyledComponets/StyledTreeItem";
+import StyledTreeItem from "./StyledComponets/StyledTreeItem.js";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import TextField from "@mui/material/TextField";
@@ -12,7 +12,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { CircularProgress } from "@mui/material";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import useWindowSize from "../../@core/hooks/useWindowSize.js";
+import useWindowSize from "../../hooks/useWindowSize.js";
 
 const CustomTree = (props) => {
   const [treeData, setTreeData] = useState([]);
@@ -26,64 +26,37 @@ const CustomTree = (props) => {
   }, [props.data]);
 
   const renderData = (TreeData, level) => {
-    return TreeData.map((node) => {
-      let label = node.text;
 
-      if (
-        node.text?.toUpperCase()?.indexOf(searchVal?.trim()?.toUpperCase()) >
-          -1 &&
-        searchVal
-      ) {
-        const searchTextIdx = node.text
-          .toUpperCase()
-          .indexOf(searchVal.toUpperCase().trim());
-        const textBeginning = node.text.slice(0, searchTextIdx);
-        const textEnding = node.text.slice(
-          searchTextIdx + searchVal.trim().length
-        );
-        const searchText = node.text.slice(
-          searchTextIdx,
-          searchVal.trim().length + 1
-        );
-        label = (
-          <Box>
-            {textBeginning}
-            <Typography
-              variant="body1"
-              display={"inline-block"}
-              sx={{ color: "#f50", fontSize: "13px" }}
-            >
-              {searchText}
-            </Typography>
-            {textEnding}
-          </Box>
-        );
+    return TreeData.map(node => {
+      let label = node.text
+
+      if (node.text?.toUpperCase()?.indexOf(searchVal?.trim()?.toUpperCase()) > -1 && searchVal) {
+
+        const targetIdx = node?.text?.toUpperCase()?.indexOf(searchVal?.toUpperCase());
+
+        const beforeStr = node?.text.substring(0, targetIdx);
+        const afterStr = node?.text.slice(targetIdx + searchVal.length)
+        const originalText = node?.text.slice(targetIdx, targetIdx + searchVal.length)
+        label = <Box>
+          {beforeStr}
+          <Typography variant='body1' display={'inline-block'} sx={{ color: '#f50', fontSize: '13px' }}>
+            {originalText}
+          </Typography>
+          {afterStr}
+        </Box>
       }
 
       if (node.children) {
-        return (
-          <StyledTreeItem
-            level={level}
-            key={node.value}
-            nodeId={node.value}
-            node={node}
-            label={label}
-          >
-            {renderData(node.children, level + 1)}
-          </StyledTreeItem>
-        );
-      }
-      return (
-        <StyledTreeItem
-          level={level}
-          key={node.value}
-          nodeId={node.value}
-          node={node}
+        return (<StyledTreeItem level={level} key={node.value} nodeId={node.value}
           label={label}
-        />
-      );
-    });
-  };
+        >
+          {renderData(node.children, level + 1)}
+        </StyledTreeItem>)
+      }
+      return <StyledTreeItem level={level} key={node.value} nodeId={node.value} label={label} />
+    })
+
+  }
 
   const searchTree = (
     treeData = [],
@@ -164,7 +137,8 @@ const CustomTree = (props) => {
           </Grid>
         </Grid>
       </Box>
-      <PerfectScrollbar style={{ height: height - 250}}>
+      <PerfectScrollbar style={{ height: height - 250 }}>
+
         {props.isLoading ? (
           <div style={{ textAlign: "center" }}>
             <CircularProgress size={25} />

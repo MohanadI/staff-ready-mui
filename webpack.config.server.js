@@ -12,15 +12,15 @@ const devexports = makeDevelopmentConfig();
  * =========================================== */
 
 module.exports = devexports;
-module.exports.devtool =   'inline-source-map';
+module.exports.devtool = 'inline-source-map';
 module.exports.devServer = {
     historyApiFallback: true,
-    port: 3005,								// Port 3005 because Tomcat uses 8080
+    port: 3000,								// Port 3005 because Tomcat uses 8080
     hot: true,								// Enable hot-reload when changes are made (does not account for build errors)
     proxy: [{									// Enable proxy for any REST calls to Spring Controllers
-           context: ['/StaffReady/v10/api/**'],
+        context: ['/StaffReady/v10/api/**'],
         target: 'https://cobalt301.openstack.local',
-           secure: false,
+        secure: false,
     }],
     open: false,
     client: {
