@@ -80,7 +80,7 @@ function SetupPage({ api }) {
         >
             <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} sm={3} md={3} lg={2}>
+                    <Grid item xs={12} sm={12} md={3} lg={3}>
                         <Box sx={{ mb: 1, width: "100%" }}>
                             <CustomTabs tabsConfig={setupTabs} context={Context} />
                         </Box>
@@ -96,7 +96,7 @@ function SetupPage({ api }) {
                             context={Context}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={9} md={9} lg={10}>
+                    <Grid item xs={12} sm={12} md={9} lg={9}>
                         {isLoading ? (
                             <LinearProgress />
                         ) : (
