@@ -1,4 +1,4 @@
-import DocumentControl from "./modules/document-control";
+import DocumentControl from "./modules/DocumentControl";
 
 export const navigation = [
     {

@@ -1,7 +1,6 @@
 import React from 'react';
-import CustomGrid from '../../../../../../../../@core/components/CutomGrid/CustomGrid';
-import Data from '../../../../../../../../@core/components/CutomGrid/Data';
-import TestGrid from '../../../../../../../../@core/components/CutomGrid/TestGrid';
+import CustomGrid from '../../../../../../../@core/components/CutomGrid/CustomGrid';
+import Data from '../../../../../../../@core/components/CutomGrid/Data';
 
 export default function SubjectDocumentBody() {
   return (

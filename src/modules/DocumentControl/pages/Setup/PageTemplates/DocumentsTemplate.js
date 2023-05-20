@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from "react";
 
-import Context from "../../Context";
-import AccordionComponent from "../../../../../../@core/components/Accordion";
+import Context from "../Context";
+import AccordionComponent from "../../../../../@core/components/Accordion";
 
 
 export default function DocumentsTemplate() {

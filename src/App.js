@@ -4,7 +4,7 @@ import {
     Routes,
     Route
 } from "react-router-dom";
-import DocumentControl from './modules/document-control';
+import DocumentControl from './modules/DocumentControl';
 import { SettingsProvider } from './@core/context/settingsContext';
 
 

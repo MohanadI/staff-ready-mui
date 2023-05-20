@@ -7,7 +7,7 @@ import {
 import { Feedback, Help, VerifiedUser } from "@mui/icons-material";
 import styled from "@emotion/styled";
 import Typography from "@mui/material/Typography";
-import FeedbackModal from "../../../../../../../@core/components/feedback-modal";
+import FeedbackModal from "../../../../../../@core/components/feedback-modal";
 
 const IconButton = styled((props) => (
   <MuiIconButton color="default" {...props} />

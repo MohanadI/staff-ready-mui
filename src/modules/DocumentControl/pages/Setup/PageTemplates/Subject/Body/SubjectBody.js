@@ -13,8 +13,8 @@ import { useForm } from "react-hook-form";
 
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import ConfirmNotification from "../../../../../../../../@core/components/confirm-dialog";
-import withAPI from "../../../../../../../../api/core";
+import ConfirmNotification from "../../../../../../../@core/components/confirm-dialog";
+import withAPI from "../../../../../../../api/core";
 import HeaderIcons from "../HeaderIcons";
 
 function SubjectBody({ api, node }) {

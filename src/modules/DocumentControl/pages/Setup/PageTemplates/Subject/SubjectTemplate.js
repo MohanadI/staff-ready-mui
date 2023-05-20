@@ -1,10 +1,10 @@
 import React, { useEffect, useContext, useState } from "react";
 
-import Context from "../../../Context";
-import AccordionComponent from "../../../../../../../@core/components/Accordion";
+import Context from "../../Context";
+import AccordionComponent from "../../../../../../@core/components/Accordion";
 import SubjectDocumentBody from "./Body/SubjectDocumentBody";
 import SubjectBody from "./Body/SubjectBody";
-import withAPI from "../../../../../../../api/core";
+import withAPI from "../../../../../../api/core";
 
 function SubjectTemplate({ api }) {
   const [isLoading, setIsLoading] = useState(false);
