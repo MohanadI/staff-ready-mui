@@ -20,17 +20,17 @@ import withAPI from "../../../../api/core";
 import useWindowSize from "../../../../@core/hooks/useWindowSize";
 
 function SetupPage({ api }) {
-    const [template, setTemplate] = useState(<h1>No Template</h1>);
-    const [isLoading, setIsLoading] = useState(false);
-    const { height } = useWindowSize();
-    const [setupPageData, setSetupPageData] = useState({
-        activeTab: "subject",
-        selectedNode: {
-            type: "subject",
-            value: "10",
-        },
-        treeData: [],
-    });
+  const [template, setTemplate] = useState(<></>);
+  const [isLoading, setIsLoading] = useState(false);
+  const { height } = useWindowSize();
+  const [setupPageData, setSetupPageData] = useState({
+    activeTab: "subject",
+    selectedNode: {
+      type: "",
+      value: null,
+    },
+    treeData: [],
+  });
 
     const DocumentControlTemplates = {
         subject: <SubjectTemplate />,
@@ -59,11 +59,13 @@ function SetupPage({ api }) {
         }
     }, [setupPageData.activeTab]);
 
-    useEffect(() => {
-        const tempTemplate =
-            DocumentControlTemplates[setupPageData.selectedNode?.type];
-        setTemplate(tempTemplate);
-    }, [setupPageData.selectedNode]);
+  useEffect(() => {
+    if (setupPageData.selectedNode?.type) {
+      const tempTemplate =
+        DocumentControlTemplates[setupPageData.selectedNode?.type];
+      setTemplate(tempTemplate);
+    }
+  }, [setupPageData.selectedNode]);
 
     const handleContextDataChange = (value, key) => {
         const tempData = { ...setupPageData };

@@ -26,8 +26,8 @@ function SubjectTemplate({ api }) {
       module: "documentcontrol",
       id: "subject",
       pk: setupPageData.selectedNode.value,
-      description: "ss",
-      body: <SubjectBody />,
+      description: "",
+      body: <SubjectBody node={setupPageData.selectedNode} />,
     },
     {
       key: "subject_documents",
@@ -35,9 +35,9 @@ function SubjectTemplate({ api }) {
       module: "documentcontrol",
       id: "subject",
       pk: setupPageData.selectedNode.value,
-      description: "ss",
       description: "",
-      body: <SubjectDocumentBody />,
+      description: "",
+      body: <SubjectDocumentBody node={setupPageData.selectedNode} />,
     },
   ];
 
