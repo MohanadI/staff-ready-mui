@@ -29,7 +29,7 @@ const StyledList = styled(List)(({ theme }) => ({
   },
 }));
 
-function EmptyStatus() {
+function EmptyStatus({ document, history }) {
   return (
     <>
       <Typography variant="h6">Document Preparation</Typography>
@@ -37,7 +37,7 @@ function EmptyStatus() {
         {generate(
           <ListItem>
             <ListItemIcon>
-              <StatusIcon noApi={true} statusKey="ok"/>
+              <StatusIcon noApi={true} statusKey="ok" />
             </ListItemIcon>
             <ListItemText primary="Single-line item" />
           </ListItem>
