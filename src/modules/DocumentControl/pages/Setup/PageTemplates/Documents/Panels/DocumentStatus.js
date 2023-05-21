@@ -9,9 +9,10 @@ import EmptyStatus from "../Components/EmptyStatus";
 import DocumentHistory from "../Components/DocumentHistory";
 
 function DocumentStatus({ api, node }) {
+  const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({});
   const [history, setHistory] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [documentType, setDocumentType] = useState(undefined);
 
   useEffect(() => {
     setIsLoading(true);
@@ -19,16 +20,21 @@ function DocumentStatus({ api, node }) {
       setIsLoading(false);
       setData(results);
     });
+    api.get(`/StaffReady/v10/api/document/${node.value}/type`, (results) => {
+      setDocumentType(results);
+    });
+    api.get(
+      `/StaffReady/v10/api/document/${node.value}/status/history`,
+      (results) => {
+        setHistory(results.reverse());
+      }
+    );
   }, [node]);
 
   const renderStatus = () => {
     if (data?.statusId === "Empty") {
       return (
-        <EmptyStatus
-          document={data}
-          //type={props.type}
-          history={history}
-        />
+        <EmptyStatus document={data} type={documentType} history={history} />
       );
     } else if (
       data?.statusId === "Revision" ||
@@ -49,26 +55,19 @@ function DocumentStatus({ api, node }) {
       <Box sx={{ textAlign: "center" }}>
         <HeaderIcons />
       </Box>
-      <Box>
-        {isLoading && (
+      {isLoading && (
+        <Box>
           <div style={{ textAlign: "center", marginTop: 15 }}>
             <CircularProgress size={25} />
           </div>
-        )}
-        {!isLoading && (
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={12} md={4}>
-              {renderStatus()}
-            </Grid>
-            <Grid item xs={12} sm={12} md={4}>
-              <DocumentHistory />
-            </Grid>
-            <Grid item xs={12} sm={12} md={4}>
-              <Typography> Available Actions</Typography>
-            </Grid>
-          </Grid>
-        )}
-      </Box>
+        </Box>
+      )}
+      {!isLoading && (
+        <Box>
+          {renderStatus()}
+          <DocumentHistory />
+        </Box>
+      )}
     </Fragment>
   );
 }

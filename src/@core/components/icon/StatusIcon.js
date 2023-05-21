@@ -15,7 +15,7 @@ function StatusIcon({ api, module, id, pk, noApi = false, statusKey }) {
         setIsLoading(false);
       });
     } else {
-      setStatus(statusKey);
+      setStatus(statusKey?.toLowerCase() || "ok");
     }
   }, []);
 
