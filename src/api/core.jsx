@@ -3,6 +3,7 @@ import { useLocationAPI } from "./location";
 // add toast
 import axios from "axios";
 import { useDocumentImproveAPI } from "./documentimprove";
+import { useSubjectApi } from './subject';
 
 /**
 * Base of the React API client
@@ -28,11 +29,13 @@ export const useAPI = () => {
             return axios.get(url)
                 .then((response) => {
                     callback && callback(response.data)
+                    return response
                 })
                 .catch((error) => {
                     console.error(error);
                     //addToast("Error loading data", {appearance: 'error', autoDismiss: false})
                     errorCallback && errorCallback(error);
+                    return error;
                 })
         },
 
@@ -54,6 +57,7 @@ function withAPI(Component, enabledAPIs) {
         //We can't use conditional logic here otherwise we'll violate the Rule of Hooks
         useLocationAPI(api, enabledAPIs)
         useDocumentImproveAPI(api, enabledAPIs)
+        useSubjectApi(api, enabledAPIs)
 
         return (
             <Component

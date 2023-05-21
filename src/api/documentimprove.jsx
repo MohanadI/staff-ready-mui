@@ -1,6 +1,6 @@
 export const useDocumentImproveAPI = (api, enabledAPIs) => {
 
-    if(enabledAPIs && !enabledAPIs.hasOwnProperty('useDocumentImproveAPI')) return;
+    if (enabledAPIs && !enabledAPIs.hasOwnProperty('useDocumentImproveAPI')) return;
 
     api.documentImprove = {}
 

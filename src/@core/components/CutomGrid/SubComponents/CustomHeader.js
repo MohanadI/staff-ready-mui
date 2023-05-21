@@ -1,19 +1,22 @@
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import cloneDeep from 'lodash/cloneDeep';
 import React, { forwardRef, useEffect, useState } from 'react';
 import SortingComp from './SortingComp';
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
 
 
 const CustomHeader = forwardRef((props, ref) => {
 
-    const [searchPatternArr, setSearchPatternArr] = useState([]);
-    const [isActiveSort, setIsActiveSort] = useState([]);
-
-
     const { visibleColumns } = props
+
+    const [searchPatternArr, setSearchPatternArr] = useState(visibleColumns.map((col) => ({ value: '', col })));
+    const [isActiveSort, setIsActiveSort] = useState([]);
+    const [checked, setChecked] = useState(false);
+
+
 
     useEffect(() => {
         const _isActiveSort = visibleColumns.map(() => false)
@@ -29,6 +32,19 @@ const CustomHeader = forwardRef((props, ref) => {
         setIsActiveSort(_isActiveSort)
     }
 
+    function isCheckBoxCol(col) {
+        return col.type === 'checkboxSelection'
+    }
+
+    function hasFilterField(col) {
+        return col.hasFilter || col.type !== "checkboxSelection";
+    }
+
+    const onHeaderChecked = (e, col) => {
+        setChecked(e.target.checked);
+        col.onHeaderChecked(e);
+    }
+
 
     return (
         <Box
@@ -42,29 +58,50 @@ const CustomHeader = forwardRef((props, ref) => {
                         sx={{ flex: col.flex, m: 1 }}
                         key={idx}
                     >
-                        <Grid container>
-                            <Grid item md={6}>
-                                <Box sx={{ fontWeight: 'bold', pb: 2, pt: 1 }}>{col.headerName}</Box>
-
-                            </Grid>
-
-                            <Grid item md={6}>
-                                <SortingComp
-                                    onSortingChanged={(mode) => onSortingChanged(mode, col, idx)}
-                                    isActive={isActiveSort[idx]}
-
+                        {isCheckBoxCol(col) ?
+                            <Box
+                                className="MuiDataGrid-cellCheckbox"
+                            // sx={{ display: 'flex', justifyContent: 'center' }}
+                            >
+                                <Checkbox
+                                    checked={checked}
+                                    onChange={(e) => onHeaderChecked(e, col)}
+                                    color="primary"
                                 />
-                            </Grid>
+                            </Box>
 
-                        </Grid>
-                        <TextField value={searchPatternArr[idx]?.value} size='small' sx={{ width: '100%' }} placeholder='search' onChange={(e) => {
-                            const _searchArr = cloneDeep(searchPatternArr);
-                            _searchArr[idx] = { value: e.target.value, col: col }
-                            setSearchPatternArr(_searchArr)
-                            col.filterGrid(_searchArr, idx)
+                            :
+                            <>
+                                <Grid container>
+                                    <Grid item md={6}>
+                                        <Box sx={{ fontWeight: 'bold', pb: 2, pt: 1 }}>{col.headerName}</Box>
+
+                                    </Grid>
+
+                                    <Grid item md={6}>
+                                        <SortingComp
+                                            onSortingChanged={(mode) => onSortingChanged(mode, col, idx)}
+                                            isActive={isActiveSort[idx]}
+
+                                        />
+                                    </Grid>
+
+                                </Grid>
+                                {hasFilterField(col) ?
+                                    <TextField value={searchPatternArr[idx]?.value} size='small' sx={{ width: '100%' }} placeholder='search' onChange={(e) => {
+                                        const _searchArr = cloneDeep(searchPatternArr);
+                                        _searchArr[idx] = { value: e.target.value, col: col }
+                                        setSearchPatternArr(_searchArr)
+                                        col.filterGrid(_searchArr, idx)
 
 
-                        }} />
+                                    }} />
+
+                                    : null}
+                            </>
+
+                        }
+
 
                     </Box>
                 )
@@ -74,5 +111,6 @@ const CustomHeader = forwardRef((props, ref) => {
 
 })
 
+CustomHeader.displayName = "CustomHeader";
 
 export default CustomHeader;
