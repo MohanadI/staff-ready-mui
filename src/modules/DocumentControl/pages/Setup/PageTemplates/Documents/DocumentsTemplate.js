@@ -1,8 +1,8 @@
 import React, { useEffect, useContext, useState } from "react";
 
-import Context from "../Context";
-import AccordionComponent from "../../../../../@core/components/Accordion";
-
+import Context from "../../Context";
+import AccordionComponent from "../../../../../../@core/components/Accordion";
+import DocumentStatus from "./Panels/DocumentStatus"
 
 export default function DocumentsTemplate() {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +25,7 @@ export default function DocumentsTemplate() {
       id: "documentstatus",
       pk: setupPageData.selectedNode.value,
       description: "",
-      body: <h1>asdasd</h1>,
+      body: <DocumentStatus node={setupPageData.selectedNode} />,
     },
     {
       key: "revision_history",

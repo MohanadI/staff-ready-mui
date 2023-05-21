@@ -6,13 +6,13 @@ import { Button, Divider, LinearProgress } from "@mui/material";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
 import Context from "./Context";
-import DocumentsTemplate from "./PageTemplates/DocumentsTemplate";
+import SubjectTemplate from "./PageTemplates/Subject/SubjectTemplate";
+import DocumentsTemplate from "./PageTemplates/Documents/DocumentsTemplate";
 import RevisionTemplate from "./PageTemplates/RevisionTemplate";
 import ClassificationFolderTemplate from "./PageTemplates/ClassificationFolderTemplate";
 import ClassificationTemplate from "./PageTemplates/ClassificationTemplate";
 import SiteTemplate from "./PageTemplates/SiteTemplate";
 import LocationTemplate from "./PageTemplates/LocationTemplate";
-import SubjectTemplate from "./PageTemplates/Subject/SubjectTemplate";
 import CustomTree from "../../../../@core/components/CustomTree/CustomTree";
 import CustomTabs from "../../../../@core/components/CustomTabs/CustomTabs";
 import { setupTabs } from "../../configs/TabsConstant";
