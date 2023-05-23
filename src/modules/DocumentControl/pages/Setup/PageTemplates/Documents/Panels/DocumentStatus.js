@@ -65,7 +65,7 @@ function DocumentStatus({ api, node }) {
       {!isLoading && (
         <Box>
           {renderStatus()}
-          <DocumentHistory />
+          {/* <DocumentHistory /> */}
         </Box>
       )}
     </Fragment>
