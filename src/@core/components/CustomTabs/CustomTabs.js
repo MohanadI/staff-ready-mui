@@ -5,11 +5,8 @@ import cloneDeep from "lodash/cloneDeep";
 import { Typography } from "@mui/material";
 
 const CustomTabs = (props) => {
-  const [tabVal, setTabVal] = useState(0);
-  const [activeTabLabel, setActiveTabLabel] = useState("");
   const [tabsConfig, setTabsConfig] = useState([]);
-  const { handleContextDataChange } = useContext(props.context)
-  // const [activeTab, setActiveTab] = useState(tabsConfig[0].name);
+  const { handleContextDataChange } = useContext(props.context);
 
   useEffect(() => {
     const _tabsConfig = cloneDeep(props.tabsConfig);
@@ -19,7 +16,6 @@ const CustomTabs = (props) => {
 
   const onChange = (tabName, tabIdx) => {
     handleContextDataChange(tabName, "activeTab");
-    // setActiveTab(tabName)
     const _tabsConfig = cloneDeep(tabsConfig);
     _tabsConfig.forEach((tab) => {
       if (tab.name === tabName) {

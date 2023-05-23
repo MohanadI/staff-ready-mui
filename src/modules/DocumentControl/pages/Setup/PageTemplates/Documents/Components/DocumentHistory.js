@@ -31,16 +31,6 @@ function EmptyHistory() {
   return (
     <>
       <Typography variant="h6">Document History</Typography>
-      <StyledList dense={true}>
-        {generate(
-          <ListItem>
-            <ListItemIcon>
-              <FolderIcon />
-            </ListItemIcon>
-            <ListItemText primary="Single-line item" />
-          </ListItem>
-        )}
-      </StyledList>
     </>
   );
 }

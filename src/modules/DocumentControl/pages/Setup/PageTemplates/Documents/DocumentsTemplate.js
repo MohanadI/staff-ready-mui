@@ -34,7 +34,7 @@ export default function DocumentsTemplate() {
       id: "revisionhistory",
       pk: setupPageData.selectedNode.value,
       description: "",
-      body: <h1>asdasd</h1>,
+      body: <></>,
     },
     {
       key: "document_properties",
@@ -43,7 +43,7 @@ export default function DocumentsTemplate() {
       id: "documentproperties",
       pk: setupPageData.selectedNode.value,
       description: "",
-      body: <h1>asdasd</h1>,
+      body: <></>,
     },
     {
       key: "reviewers",
@@ -52,7 +52,7 @@ export default function DocumentsTemplate() {
       id: "reviewers",
       pk: setupPageData.selectedNode.value,
       description: "",
-      body: <h1>asdasd</h1>,
+      body: <></>,
     },
     {
       key: "final_reviewers",
@@ -61,7 +61,7 @@ export default function DocumentsTemplate() {
       id: "finalreviewers",
       pk: setupPageData.selectedNode.value,
       description: "",
-      body: <h1>asdasd</h1>,
+      body: <></>,
     },
     {
       key: "approvers",
@@ -70,7 +70,7 @@ export default function DocumentsTemplate() {
       id: "approvers",
       pk: setupPageData.selectedNode.value,
       description: "",
-      body: <h1>asdasd</h1>,
+      body: <></>,
     },
     {
       key: "acknowledgment_list",
@@ -79,7 +79,7 @@ export default function DocumentsTemplate() {
       id: "acknowledgmentlist",
       pk: setupPageData.selectedNode.value,
       description: "",
-      body: <h1>asdasd</h1>,
+      body: <></>,
     },
     {
       key: "messages",
@@ -88,7 +88,7 @@ export default function DocumentsTemplate() {
       id: "messages",
       pk: setupPageData.selectedNode.value,
       description: "",
-      body: <h1>asdasd</h1>,
+      body: <></>,
     },
     {
       key: "assigned_locations",
@@ -97,7 +97,7 @@ export default function DocumentsTemplate() {
       id: "assignedLocations",
       pk: setupPageData.selectedNode.value,
       description: "",
-      body: <h1>asdasd</h1>,
+      body: <></>,
     },
     {
       key: "associated_documents",
@@ -106,7 +106,7 @@ export default function DocumentsTemplate() {
       id: "assignedLocations",
       pk: setupPageData.selectedNode.value,
       description: "",
-      body: <h1>asdasd</h1>,
+      body: <></>,
     },
     {
       key: "publish_history",
@@ -115,7 +115,7 @@ export default function DocumentsTemplate() {
       id: "publishhistory",
       pk: setupPageData.selectedNode.value,
       description: "",
-      body: <h1>asdasd</h1>,
+      body: <></>,
     },
   ];
 

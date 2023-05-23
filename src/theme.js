@@ -39,15 +39,6 @@ const theme = createTheme({
           padding: "7px !important",
         },
       },
-    },
-    MuiTreeItem: {
-      styleOverrides: {
-        label: {
-          fontSize: "13px",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-        },
-      },
     }
   },
 });
