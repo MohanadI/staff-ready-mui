@@ -8,7 +8,7 @@ const BulkEditSelectDocuments = (props) => {
     const sharedData = useBulkEditContext();
     const { selectedRows } = sharedData.values;
     const { setSelectedRows } = sharedData.methods
-    const apiRef = useGridApiRef();
+    const apiRef = useGridApiRef('');
 
     const { documents } = sharedData.values;
 
@@ -26,11 +26,12 @@ const BulkEditSelectDocuments = (props) => {
 
     return (
         <CustomGrid
-            ref={apiRef}
+            apiRef={apiRef}
             rows={documents}
             checkboxSelection
             rowSelectionModel={selectedRows}
             onRowSelectionModelChange={onRowSelected}
+            // utilities={gridUtilities}
             columns={
                 [
                     {

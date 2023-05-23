@@ -61,12 +61,13 @@ const CustomHeader = forwardRef((props, ref) => {
                         {isCheckBoxCol(col) ?
                             <Box
                                 className="MuiDataGrid-cellCheckbox"
-                            // sx={{ display: 'flex', justifyContent: 'center' }}
+                                sx={{ display: 'flex', justifyContent: 'center' }}
                             >
                                 <Checkbox
                                     checked={checked}
                                     onChange={(e) => onHeaderChecked(e, col)}
                                     color="primary"
+                                    sx={{ marginRight: 1 }}
                                 />
                             </Box>
 
@@ -93,9 +94,8 @@ const CustomHeader = forwardRef((props, ref) => {
                                         _searchArr[idx] = { value: e.target.value, col: col }
                                         setSearchPatternArr(_searchArr)
                                         col.filterGrid(_searchArr, idx)
-
-
-                                    }} />
+                                    }}
+                                    />
 
                                     : null}
                             </>
