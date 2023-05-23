@@ -1,4 +1,4 @@
-import { useState, useEffect, forwardRef } from 'react';
+import { useState, useEffect, forwardRef, useRef } from 'react';
 import { DataGrid, GRID_CHECKBOX_SELECTION_COL_DEF, useGridApiRef } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 
@@ -6,13 +6,14 @@ import CustomHeader from './SubComponents/CustomHeader';
 
 
 
-export const CustomGrid = forwardRef(({ rows, columns, onSelectRow, ...others }, apiRef) => {
+export const CustomGrid = forwardRef(({ rows, columns, onSelectRow, ...others }, ref) => {
 
     const [_rows, setRows] = useState(rows);
     const [filteredRows, setFilteredRows] = useState([])
     const [_columns, setColumns] = useState(columns);
 
     const pageSizeOptions = [10, 12, 15, 20, 30]
+    const apiRef = useGridApiRef('');
 
     useEffect(() => {
 
@@ -46,11 +47,13 @@ export const CustomGrid = forwardRef(({ rows, columns, onSelectRow, ...others },
     function onSortingChanged(mode, colIdx) {
         const cols = apiRef.current.getAllColumns()
         apiRef.current.sortColumn(cols[colIdx], mode)
+
     }
 
 
 
     const processCols = (cols) => {
+        console.log('processCols fn', apiRef)
         const _cols = cols.map((col, idx) => {
             if (col.type === 'checkboxSelection') {
                 col = {
@@ -89,6 +92,6 @@ export const CustomGrid = forwardRef(({ rows, columns, onSelectRow, ...others },
     )
 })
 
-CustomGrid.displayName = 'CustomGrid';
+// CustomGrid.displayName = 'CustomGrid';
 
 export default CustomGrid;

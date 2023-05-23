@@ -7,6 +7,7 @@ import {
 import { Feedback, Help, VerifiedUser } from "@mui/icons-material";
 import styled from "@emotion/styled";
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import FeedbackModal from "../../../../../../@core/components/feedback-modal";
 
 const IconButton = styled((props) => (
@@ -52,11 +53,17 @@ export default function HeaderIcons() {
           vertical: "bottom",
           horizontal: "center",
         }}
+        sx={{ maxWidth: '800px' }}
       >
-        <Typography variant="body1" sx={{ p: 2, fontSize: "13px" }}>
-          This color bar allows you to edit the document subject ID or edit what
-          parent folder it is a part of.
-        </Typography>
+        <Box sx={{ p: 2 }}>
+          <Typography gutterBottom variant="h4">
+            Subject
+          </Typography>
+          <Typography variant="body1" sx={{ fontSize: "13px" }}>
+            This color bar allows you to edit the document subject ID or edit what parent folder it is a part of.
+          </Typography>
+        </Box>
+
       </Popover>
       <IconButton
         aria-describedby={id}
