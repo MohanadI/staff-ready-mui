@@ -6,8 +6,8 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import BulkEditModal from '../SubComp/BulkEditModal';
-
-
+import HeaderIcons from "../../Documents/HeaderIcons";
+import { Stack } from '@mui/material';
 
 function SubjectDocumentBody(props) {
 
@@ -37,6 +37,14 @@ function SubjectDocumentBody(props) {
 
   return (
     <>
+      <Stack direction="row"
+      spacing={2}
+      alignItems="center"
+      justifyContent="center"
+      >
+        <HeaderIcons />
+      </Stack>
+
       <Box sx={{ mb: 2 }}>
         <Button
           variant='outlined'
