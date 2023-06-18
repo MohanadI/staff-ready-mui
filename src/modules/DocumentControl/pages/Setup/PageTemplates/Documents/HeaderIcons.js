@@ -1,5 +1,6 @@
 import React, { useState, Fragment } from "react";
 import {
+  Box,
   IconButton as MuiIconButton,
   Popover,
   Tooltip,
@@ -53,11 +54,14 @@ export default function HeaderIcons() {
           horizontal: "center",
         }}
       >
-        <Typography variant="body1" sx={{ p: 2, fontSize: "13px" }}>
-          This color bar allows you view the status of the document including
-          document version, any feedback that has been submitted, and a history
-          of actions taken with the document.
-        </Typography>
+        <Box sx={{ p: 2 }}>
+          <Typography gutterBottom variant="h4">
+            Subject Documents
+          </Typography>
+          <Typography variant="body1" sx={{ fontSize: "13px" }}>
+            This color bar allows you to edit all documents within this subject and bulk-edit properties for some or all Subject Documents.
+          </Typography>
+        </Box>
       </Popover>
       <IconButton
         aria-describedby={id}
@@ -66,12 +70,6 @@ export default function HeaderIcons() {
       >
         <Tooltip title="Help">
           <Help />
-        </Tooltip>
-      </IconButton>
-
-      <IconButton>
-        <Tooltip title="Audit">
-          <VerifiedUser />
         </Tooltip>
       </IconButton>
 
