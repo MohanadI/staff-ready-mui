@@ -18,19 +18,23 @@ import CustomTabs from "../../../../@core/components/CustomTabs/CustomTabs";
 import { setupTabs } from "../../configs/TabsConstant";
 import withAPI from "../../../../api/core";
 import useWindowSize from "../../../../@core/hooks/useWindowSize";
+import Form from "../../../../@core/components/Form/Form";
+import TextField from '@mui/material/TextField'
+import { findObjectById } from "../../../../@core/utils/GeneralUtils";
+
 
 function SetupPage({ api }) {
-  const [template, setTemplate] = useState(<></>);
-  const [isLoading, setIsLoading] = useState(false);
-  const { height } = useWindowSize();
-  const [setupPageData, setSetupPageData] = useState({
-    activeTab: "subject",
-    selectedNode: {
-      type: "",
-      value: null,
-    },
-    treeData: [],
-  });
+    const [template, setTemplate] = useState(<></>);
+    const [isLoading, setIsLoading] = useState(false);
+    const { height } = useWindowSize();
+    const [setupPageData, setSetupPageData] = useState({
+        activeTab: "subject",
+        selectedNode: {
+            type: "",
+            value: null,
+        },
+        treeData: [],
+    });
 
     const DocumentControlTemplates = {
         subject: <SubjectTemplate />,
@@ -59,13 +63,13 @@ function SetupPage({ api }) {
         }
     }, [setupPageData.activeTab]);
 
-  useEffect(() => {
-    if (setupPageData.selectedNode?.type) {
-      const tempTemplate =
-        DocumentControlTemplates[setupPageData.selectedNode?.type];
-      setTemplate(tempTemplate);
-    }
-  }, [setupPageData.selectedNode]);
+    useEffect(() => {
+        if (setupPageData.selectedNode?.type) {
+            const tempTemplate =
+                DocumentControlTemplates[setupPageData.selectedNode?.type];
+            setTemplate(tempTemplate);
+        }
+    }, [setupPageData.selectedNode]);
 
     const handleContextDataChange = (value, key) => {
         const tempData = { ...setupPageData };
@@ -95,6 +99,10 @@ function SetupPage({ api }) {
                             data={setupPageData.treeData}
                             isLoading={isLoading}
                             tabsConfig={setupTabs}
+                            onNodeSelect={(e, node, treeData) => {
+                                const match = findObjectById(treeData, node);
+                                handleContextDataChange(match, "selectedNode");
+                            }}
                             context={Context}
                         />
                     </Grid>
@@ -110,6 +118,65 @@ function SetupPage({ api }) {
                         <PerfectScrollbar style={{ height: height - 200, paddingRight: 10 }}>
                             {template}
                         </PerfectScrollbar>
+                        {/* <Form
+                            fields={[
+                                {
+                                    comp: (
+                                        <TextField
+                                            label="name"
+                                            size="small"
+                                        // onChange={function test(e) { console.log(e.target.value) }}
+
+                                        />
+                                    ),
+                                    name: 'name',
+                                    validation: { required: true }
+                                },
+                                {
+                                    comp: (
+                                        <TextField
+                                            label="Address"
+                                            size="small"
+                                        />
+                                    ),
+                                    name: 'address',
+                                    validation: { required: true, maxLength: 3 },
+                                }
+                            ]}
+
+                            colPerRow={2}
+                            actions={[
+                                {
+                                    type: 'submit',
+                                    comp: (<Button variant="outlined" size="small">
+                                        Save
+                                    </Button>),
+                                },
+                                {
+                                    type: 'reset',
+                                    comp: (<Button variant="default" size="small">
+                                        reset
+                                    </Button>)
+                                }
+                            ]}
+                            // customLayout={(fields) => {
+                            //     return (
+                            //         <Grid container spacing={2}>
+                            //             <Grid item md={6}>
+                            //                 {fields[0]}
+                            //             </Grid>
+                            //             <Grid item md={6}>
+                            //                 {fields[1]}
+                            //             </Grid>
+                            //         </Grid>
+                            //     )
+                            // }}
+                            onChange={(formData) => {
+                                console.log(formData);
+                            }}
+                            onChangeDep={['name']}
+
+                        /> */}
                     </Grid>
                 </Grid>
             </Box>

@@ -1,5 +1,6 @@
 import { useState, useEffect, forwardRef, useRef } from 'react';
 import { DataGrid, GRID_CHECKBOX_SELECTION_COL_DEF, useGridApiRef } from '@mui/x-data-grid';
+import isEmpty from 'lodash/isEmpty';
 import Box from '@mui/material/Box';
 
 import CustomHeader from './SubComponents/CustomHeader';
@@ -13,7 +14,13 @@ export const CustomGrid = forwardRef(({ rows, columns, onSelectRow, ...others },
     const [_columns, setColumns] = useState(columns);
 
     const pageSizeOptions = [10, 12, 15, 20, 30]
-    const apiRef = useGridApiRef('');
+    const apiRef = useGridApiRef("");
+
+    useEffect(() => {
+        if (!isEmpty(others?.apiRef?.current)) {
+            apiRef.current = others.apiRef.current;
+        }
+    }, [others.apiRef])
 
     useEffect(() => {
 
@@ -53,7 +60,6 @@ export const CustomGrid = forwardRef(({ rows, columns, onSelectRow, ...others },
 
 
     const processCols = (cols) => {
-        console.log('processCols fn', apiRef)
         const _cols = cols.map((col, idx) => {
             if (col.type === 'checkboxSelection') {
                 col = {
@@ -92,6 +98,6 @@ export const CustomGrid = forwardRef(({ rows, columns, onSelectRow, ...others },
     )
 })
 
-// CustomGrid.displayName = 'CustomGrid';
+CustomGrid.displayName = 'CustomGrid';
 
 export default CustomGrid;

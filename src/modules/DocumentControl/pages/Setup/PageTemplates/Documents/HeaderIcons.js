@@ -78,7 +78,6 @@ export default function HeaderIcons() {
       <FeedbackModal
         open={openFeedback}
         setCallback={(value) => {
-          console.log(value);
           setOpenFeedback(false);
         }}
       />

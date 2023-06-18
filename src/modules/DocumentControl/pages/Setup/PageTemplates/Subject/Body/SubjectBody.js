@@ -178,7 +178,6 @@ function SubjectBody({ api, node }) {
       <ConfirmNotification
         open={confirmDelete}
         setCallback={(value) => {
-          console.log(value);
           setConfirmDelete(false);
         }}
       />
