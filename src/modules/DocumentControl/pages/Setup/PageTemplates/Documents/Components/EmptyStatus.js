@@ -151,15 +151,6 @@ function EmptyStatus({ api, document, history, type }) {
       ),
     },
   ];
-  /* Subject
-      SubjectTemplate.js
-      /Colorbars
-      /Components
-      /Configs 
-        Context
-        Constants
-
-  */
   return (
     <>
       <Grid container>
