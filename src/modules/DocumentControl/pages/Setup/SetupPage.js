@@ -8,7 +8,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import Context from "./Context";
 import SubjectTemplate from "./PageTemplates/Subject/SubjectTemplate";
 import DocumentsTemplate from "./PageTemplates/Documents/DocumentsTemplate";
-import RevisionTemplate from "./PageTemplates/RevisionTemplate";
+import RevisionTemplate from "./PageTemplates/Revision/RevisionTemplate";
 import ClassificationFolderTemplate from "./PageTemplates/ClassificationFolderTemplate";
 import ClassificationTemplate from "./PageTemplates/ClassificationTemplate";
 import SiteTemplate from "./PageTemplates/SiteTemplate";
