@@ -14,7 +14,7 @@ import Typography from "@mui/material/Typography";
 import withAPI from "../../../../../../../api/core";
 import InstructionsModal from "./InstructionsModal";
 
-function RevisionStatus({ api, history, document }) {
+function RevisionStatus({ api, history, document, type }) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [nextStep, setNextStep] = React.useState("reviewers");
   const [emptyStatus, setEmptyStatus] = React.useState({});
@@ -24,14 +24,13 @@ function RevisionStatus({ api, history, document }) {
     React.useState(false);
 
   React.useEffect(() => {
-    console.log(document);
     loadStatus();
   }, [document]);
 
   const loadStatus = () => {
     setIsLoading(true);
     api.get(
-      `/StaffReady/v10/api/document/${document.isDocumentPk}/status/empty`,
+      `/StaffReady/v10/api/document/${document.improvePk}/status/empty`,
       (results) => {
         setIsLoading(false);
         setEmptyStatus(results.data);
@@ -160,10 +159,17 @@ function RevisionStatus({ api, history, document }) {
   ];
   return (
     <>
-      <InstructionsModal open={showInstructionsModal} setCallback={(value) => {
+      <InstructionsModal
+        open={showInstructionsModal}
+        history={history}
+        type={type}
+        document={document}
+        statusOverview={emptyStatus}
+        setCallback={(value) => {
           console.log(value);
           setShowInstructionsModal(false);
-        }}/>
+        }}
+      />
       <Timeline position="alternate" sx={{ border: "1px solid #f2f2f2" }}>
         {Steps.map((item) => {
           if (item.condition) {

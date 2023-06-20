@@ -1,8 +1,6 @@
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import { Button, Typography } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
+import Typography from "@mui/material/Typography";
 
 const UploadZoneWrapper = styled(Box)`
   margin-top: 5px;
@@ -21,17 +19,11 @@ const UploadZoneWrapper = styled(Box)`
   }
 `;
 
-const UploadZone = ({ uploadInstructions }) => {
+const UploadZone = ({ uploadInstructions, actions }) => {
   return (
     <UploadZoneWrapper>
       <Typography variant="body1">{uploadInstructions}</Typography>
-      <Button startIcon={<VisibilityIcon />} variant="outlined">
-        View Document
-      </Button>
-      <br />
-      <Button startIcon={<ChangeCircleIcon />} variant="outlined">
-        Replace Document
-      </Button>
+      {actions}
     </UploadZoneWrapper>
   );
 };
