@@ -1,7 +1,8 @@
 import React, { useEffect, useContext, useState } from "react";
 
-import Context from "../Context";
-import AccordionComponent from "../../../../../@core/components/Accordion";
+import Context from "../../Context";
+import AccordionComponent from "../../../../../../@core/components/Accordion";
+import RevisionBody from "./Panels/RevisionBody.js";
 
 
 export default function RevisionTemplate() {
@@ -25,7 +26,7 @@ export default function RevisionTemplate() {
       id: "revision",
       pk: setupPageData.selectedNode.value,
       description: "",
-      body: <></>,
+      body: <RevisionBody pk={setupPageData.selectedNode.value} /> , 
     },
   ];
 
