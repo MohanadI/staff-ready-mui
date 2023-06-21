@@ -5,6 +5,7 @@ import axios from "axios";
 import { useDocumentImproveAPI } from "./documentimprove";
 import { useSubjectApi } from './subject';
 import { useClassificationAPI } from './classificaiton';
+import { useCommonAPI } from './common';
 
 /**
 * Base of the React API client
@@ -59,7 +60,8 @@ function withAPI(Component, enabledAPIs) {
         useLocationAPI(api, enabledAPIs)
         useDocumentImproveAPI(api, enabledAPIs)
         useSubjectApi(api, enabledAPIs)
-        useClassificationAPI(api, enabledAPIs)
+        useClassificationAPI(api, enabledAPIs);
+        useCommonAPI(api, enabledAPIs);
 
         return (
             <Component

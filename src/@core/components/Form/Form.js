@@ -1,6 +1,6 @@
 import { useForm, Controller } from 'react-hook-form';
 import Grid from '@mui/material/Grid'
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import Stack from '@mui/material/Stack';
 import Item from '@mui/material/Paper'
 import Box from '@mui/material/Box'
@@ -10,9 +10,9 @@ import Style from './Style';
 import { isEqual } from 'lodash';
 
 
-const Form = (props) => {
+const Form = React.forwardRef((props, ref) => {
 
-    const { colPerRow, fields, actions, defaultValues, mode = "onTouched", onChange, onChangeDep, onSubmit } = props;
+    const { colPerRow, fields, actions, defaultValues, mode = "onTouched", onChange, onChangeDep, onSubmit, exposeUtils } = props;
 
     const [defaultVal] = useState(() => getDefaultValues(defaultValues, fields));
     const [colWidth, setColWidth] = useState(4);
@@ -21,12 +21,6 @@ const Form = (props) => {
     const theme = useTheme();
     const prevFormData = useRef(getDefaultValues(defaultValues, onChangeDep));
 
-
-    useEffect(() => {
-        if (typeof validationTrigger === 'function') {
-            validationTrigger(trigger)
-        }
-    }, [])
 
     useEffect(() => {
 
@@ -42,6 +36,14 @@ const Form = (props) => {
         setColWidth(_colWidth)
 
     }, [colPerRow])
+
+    useImperativeHandle(ref, () => (
+        {
+            submitForm: handleSubmit
+        }
+    ))
+
+
 
 
     let formData = "";
@@ -67,7 +69,6 @@ const Form = (props) => {
                 prevFormData.current = _formData;
                 onChange(_formData);
             }
-
         }
     }, [formData])
 
@@ -76,12 +77,14 @@ const Form = (props) => {
 
 
 
-    function _onSubmit(formData) {
+    function _onSubmit(result) {
         if (typeof onSubmit === 'function') {
-            onSubmit(formData);
+            onSubmit(result);
         }
+        return "test"
 
     }
+
 
     let calledFields = [];
     if (props.hasOwnProperty('customLayout') && props.customLayout) {
@@ -102,6 +105,7 @@ const Form = (props) => {
                             {fieldsComp?.map((field, i) => {
                                 return (
                                     <Grid key={i} item md={colWidth}>
+
                                         {field(formState)}
                                     </Grid>
                                 )
@@ -138,6 +142,6 @@ const Form = (props) => {
         </form>
     )
 
-}
+})
 
 export default Form;

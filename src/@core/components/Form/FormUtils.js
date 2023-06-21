@@ -107,7 +107,7 @@ export function processingFormField(fields, theme, formHookProps) {
                 const comp = element?.comp;
                 const name = element?.name
                 return <>
-                    {React.cloneElement(comp, { ...comp.props, register, validation, name, ...formHookProps })}
+                    {React.cloneElement(comp, { ...comp.props, register, formComp: true, validation, name, ...formHookProps })}
 
                     <Box sx={style.formErrorMsg || {}}>
                         {errors[element.name]?.message ?

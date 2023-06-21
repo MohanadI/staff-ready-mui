@@ -23,11 +23,19 @@ const CustomTree = (props) => {
   const { onNodeSelect = (() => { }) } = props
 
   useEffect(() => {
-    setTreeData(props.data);
+    if (props.api) {
+      (async () => {
+        const resp = await props.api();
+        setTreeData(resp.data);
+      })()
+    } else {
+      setTreeData(props.data);
+    }
+
   }, [props.data]);
 
   const renderData = (TreeData, level) => {
-    return TreeData.map(node => {
+    return TreeData?.map(node => {
       let label = node.text
 
       if (node.text?.toUpperCase()?.indexOf(searchVal?.trim()?.toUpperCase()) > -1 && searchVal) {
