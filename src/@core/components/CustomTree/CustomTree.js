@@ -80,15 +80,6 @@ const CustomTree = (props) => {
             {afterStr}
           </Box>
         );
-
-        TreeItemLabelWithIcon = (
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box>
-              <TreeIcon type={node.type} />
-            </Box>
-            {label}
-          </Box>
-        );
       }
 
       if (typeof props.nodeFormatter === 'function') {
