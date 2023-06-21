@@ -1,12 +1,12 @@
 import React, { useEffect, useState, Fragment } from "react";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import withAPI from "../../../../../../../api/core";
 import HeaderIcons from "../HeaderIcons";
 import EmptyStatus from "../Components/EmptyStatus";
 import DocumentHistory from "../Components/DocumentHistory";
+import RevisionStatus from "../Components/RevisionStatus";
+import PublishedStatus from "../Components/PublishedStatus";
 
 function DocumentStatus({ api, node }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -41,12 +41,12 @@ function DocumentStatus({ api, node }) {
       data?.statusId === "Full" ||
       data?.latestRevision?.statusId === "Re Approval"
     ) {
-      return <EmptyStatus />;
+      return <RevisionStatus document={data} type={documentType} history={history} />;
     } else if (
       data?.statusId === "Publish" &&
       data?.latestRevision?.statusId !== "Re Approval"
     ) {
-      return <EmptyStatus />;
+      return <PublishedStatus />;
     }
   };
 

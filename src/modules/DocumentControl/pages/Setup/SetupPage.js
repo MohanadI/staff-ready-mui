@@ -16,172 +16,122 @@ import LocationTemplate from "./PageTemplates/LocationTemplate";
 import CustomTree from "../../../../@core/components/CustomTree/CustomTree";
 import CustomTabs from "../../../../@core/components/CustomTabs/CustomTabs";
 import { setupTabs } from "../../configs/TabsConstant";
-import withAPI from "../../../../api/core";
 import useWindowSize from "../../../../@core/hooks/useWindowSize";
-import Form from "../../../../@core/components/Form/Form";
-import TextField from '@mui/material/TextField'
 import { findObjectById } from "../../../../@core/utils/GeneralUtils";
-
+import TreeIcon from "../../../../@core/components/icon/TreeIcon";
+import withAPI from "../../../../api/core";
 
 function SetupPage({ api }) {
-    const [template, setTemplate] = useState(<></>);
-    const [isLoading, setIsLoading] = useState(false);
-    const { height } = useWindowSize();
-    const [setupPageData, setSetupPageData] = useState({
-        activeTab: "subject",
-        selectedNode: {
-            type: "",
-            value: null,
-        },
-        treeData: [],
-    });
+  const [template, setTemplate] = useState(<></>);
+  const [isLoading, setIsLoading] = useState(false);
+  const { height } = useWindowSize();
+  const [setupPageData, setSetupPageData] = useState({
+    activeTab: "subject",
+    selectedNode: {
+      type: "",
+      value: null,
+    },
+    treeData: [],
+  });
 
-    const DocumentControlTemplates = {
-        subject: <SubjectTemplate />,
-        document: <DocumentsTemplate />,
-        revision: <RevisionTemplate />,
-        classification_folder: <ClassificationFolderTemplate />,
-        classification: <ClassificationTemplate />,
-        site: <SiteTemplate />,
-        location: <LocationTemplate />,
-    };
+  const DocumentControlTemplates = {
+    subject: <SubjectTemplate />,
+    document: <DocumentsTemplate />,
+    revision: <RevisionTemplate />,
+    classification_folder: <ClassificationFolderTemplate />,
+    classification: <ClassificationTemplate />,
+    site: <SiteTemplate />,
+    location: <LocationTemplate />,
+  };
 
-    useEffect(() => {
-        if (setupPageData.activeTab) {
-            setIsLoading(true);
-            handleContextDataChange([], "treeData");
-            api.get(
-                "StaffReady/v10/api/tree/" + setupPageData.activeTab + "/documents",
-                (results) => {
-                    const tempData = { ...setupPageData };
-                    tempData["treeData"] = results;
-                    tempData["selectedNode"] = results.length > 0 ? results[0] : {};
-                    setSetupPageData(tempData);
-                    setIsLoading(false);
-                }
-            );
+  useEffect(() => {
+    if (setupPageData.activeTab) {
+      setIsLoading(true);
+      setTemplate(<></>);
+      handleContextDataChange([], "treeData");
+      api.get(
+        "/StaffReady/v10/api/tree/" + setupPageData.activeTab + "/documents",
+        (results) => {
+          const tempData = { ...setupPageData };
+          tempData["treeData"] = results;
+          tempData["selectedNode"] = results.length > 0 ? results[0] : {};
+          setSetupPageData(tempData);
+          setIsLoading(false);
         }
-    }, [setupPageData.activeTab]);
+      );
+    }
+  }, [setupPageData.activeTab]);
 
-    useEffect(() => {
-        if (setupPageData.selectedNode?.type) {
-            const tempTemplate =
-                DocumentControlTemplates[setupPageData.selectedNode?.type];
-            setTemplate(tempTemplate);
-        }
-    }, [setupPageData.selectedNode]);
+  useEffect(() => {
+    if (setupPageData.selectedNode?.type) {
+      const tempTemplate =
+        DocumentControlTemplates[setupPageData.selectedNode?.type];
+      setTemplate(tempTemplate);
+    }
+  }, [setupPageData.selectedNode]);
 
-    const handleContextDataChange = (value, key) => {
-        const tempData = { ...setupPageData };
-        tempData[key] = value;
-        setSetupPageData(tempData);
-    };
+  const handleContextDataChange = (value, key) => {
+    const tempData = { ...setupPageData };
+    tempData[key] = value;
+    setSetupPageData(tempData);
+  };
 
-    return (
-        <Context.Provider
-            value={{
-                setupPageData,
-                handleContextDataChange,
-            }}
-        >
-            <Box sx={{ flexGrow: 1 }}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={12} md={3} lg={3}>
-                        <Box sx={{ mb: 1, width: "100%" }}>
-                            <CustomTabs tabsConfig={setupTabs} context={Context} />
-                        </Box>
-                        <Grid item xs={12} sx={{ mb: 1.5 }}>
-                            <Button variant="outlined" size="small" sx={{ width: "100%" }}>
-                                Add
-                            </Button>
-                        </Grid>
-                        <CustomTree
-                            data={setupPageData.treeData}
-                            isLoading={isLoading}
-                            tabsConfig={setupTabs}
-                            onNodeSelect={(e, node, treeData) => {
-                                const match = findObjectById(treeData, node);
-                                handleContextDataChange(match, "selectedNode");
-                            }}
-                            context={Context}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={9} lg={9}>
-                        {isLoading ? (
-                            <LinearProgress />
-                        ) : (
-                            <Typography variant="h5" gutterBottom>
-                                {setupPageData.selectedNode?.text}
-                            </Typography>
-                        )}
-                        <Divider sx={{ mb: 2 }} />
-                        <PerfectScrollbar style={{ height: height - 200, paddingRight: 10 }}>
-                            {template}
-                        </PerfectScrollbar>
-                        {/* <Form
-                            fields={[
-                                {
-                                    comp: (
-                                        <TextField
-                                            label="name"
-                                            size="small"
-                                        // onChange={function test(e) { console.log(e.target.value) }}
-
-                                        />
-                                    ),
-                                    name: 'name',
-                                    validation: { required: true }
-                                },
-                                {
-                                    comp: (
-                                        <TextField
-                                            label="Address"
-                                            size="small"
-                                        />
-                                    ),
-                                    name: 'address',
-                                    validation: { required: true, maxLength: 3 },
-                                }
-                            ]}
-
-                            colPerRow={2}
-                            actions={[
-                                {
-                                    type: 'submit',
-                                    comp: (<Button variant="outlined" size="small">
-                                        Save
-                                    </Button>),
-                                },
-                                {
-                                    type: 'reset',
-                                    comp: (<Button variant="default" size="small">
-                                        reset
-                                    </Button>)
-                                }
-                            ]}
-                            // customLayout={(fields) => {
-                            //     return (
-                            //         <Grid container spacing={2}>
-                            //             <Grid item md={6}>
-                            //                 {fields[0]}
-                            //             </Grid>
-                            //             <Grid item md={6}>
-                            //                 {fields[1]}
-                            //             </Grid>
-                            //         </Grid>
-                            //     )
-                            // }}
-                            onChange={(formData) => {
-                                console.log(formData);
-                            }}
-                            onChangeDep={['name']}
-
-                        /> */}
-                    </Grid>
-                </Grid>
+  return (
+    <Context.Provider
+      value={{
+        setupPageData,
+        handleContextDataChange,
+      }}
+    >
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={12} md={3} lg={3}>
+            <Box sx={{ mb: 1, width: "100%" }}>
+              <CustomTabs tabsConfig={setupTabs} context={Context} />
             </Box>
-        </Context.Provider>
-    );
+            <Grid item xs={12} sx={{ mb: 1.5 }}>
+              <Button variant="outlined" size="small" sx={{ width: "100%" }}>
+                Add
+              </Button>
+            </Grid>
+            <CustomTree
+              data={setupPageData.treeData}
+              isLoading={isLoading}
+              tabsConfig={setupTabs}
+              onNodeSelect={(e, node, treeData) => {
+                const match = findObjectById(treeData, node);
+                handleContextDataChange(match, "selectedNode");
+              }}
+              context={Context}
+            />
+          </Grid>
+          <Grid item xs={12} sm={12} md={9} lg={9}>
+            {isLoading ? (
+              <LinearProgress />
+            ) : (
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box>
+                  <TreeIcon
+                    size={{ width: 30, height: 30 }}
+                    type={setupPageData.selectedNode?.type}
+                  />
+                </Box>
+                <Typography variant="h5" gutterBottom>
+                  {setupPageData.selectedNode?.text}
+                </Typography>
+              </Box>
+            )}
+            <Divider sx={{ mb: 2 }} />
+            <PerfectScrollbar
+              style={{ height: height - 200, paddingRight: 10 }}
+            >
+              {template}
+            </PerfectScrollbar>
+          </Grid>
+        </Grid>
+      </Box>
+    </Context.Provider>
+  );
 }
 
 export default withAPI(SetupPage);

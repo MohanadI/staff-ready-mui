@@ -25,7 +25,7 @@ export default function RevisionTemplate() {
       id: "revision",
       pk: setupPageData.selectedNode.value,
       description: "",
-      body: <h1>asdasd</h1>,
+      body: <></>,
     },
   ];
 

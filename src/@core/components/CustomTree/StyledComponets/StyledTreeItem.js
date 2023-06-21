@@ -1,37 +1,40 @@
-import { styled, alpha } from '@mui/material/styles';
-import TreeItem, { treeItemClasses } from '@mui/lab/TreeItem';
+import { styled, alpha } from "@mui/material/styles";
+import TreeItem, { treeItemClasses } from "@mui/lab/TreeItem";
 
 const StyledTreeItem = styled((props) => {
-    return <TreeItem {...props} classes={{ content: `tree-level-${props.level}` }} />
+  return (
+    <TreeItem {...props} classes={{ content: `tree-level-${props.level}` }} />
+  );
 })(({ theme }) => {
-    return {
+  return {
+    [`.${treeItemClasses.root}`]: {},
+    [`.${treeItemClasses.group}`]: {
+      marginLeft: 15,
+      borderLeft: `1px solid ${alpha(theme.palette.text.primary, 0.4)}`,
+    },
+    [`.${treeItemClasses.content}`]: {
+      maxWidth: "100%",
+      padding: 0,
+      "&::before": {
+        content: '""',
+        borderBottom: `1px solid ${alpha(theme.palette.text.primary, 0.4)}`,
+        paddingLeft: "10px",
+      },
 
-        [`.${treeItemClasses.root}`]: {
-
+      "&.tree-level-1": {
+        "&::before": {
+          content: "none",
         },
-        [`.${treeItemClasses.group}`]: {
-            marginLeft: 15,
-            borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`
-        },
-        [`.${treeItemClasses.content}`]: {
-            whiteSpace: 'nowrap',
-            width: 'fit-content',
-            '&::before': {
-                content: '""',
-                borderBottom: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
-                paddingLeft: '10px',
-            },
+      },
 
-            '&.tree-level-1': {
-                '&::before': {
-                    content: 'none'
-                },
-            },
-
-        },
-
-    }
-
-})
+      ".MuiTypography-root": {
+        maxWidth: "100%",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      },
+    },
+  };
+});
 
 export default StyledTreeItem;

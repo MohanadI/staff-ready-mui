@@ -1,5 +1,5 @@
-import { red, grey } from '@mui/material/colors';
-import { createTheme } from '@mui/material/styles';
+import { red, grey } from "@mui/material/colors";
+import { createTheme } from "@mui/material/styles";
 
 // A custom theme for this app
 const theme = createTheme({
@@ -45,15 +45,17 @@ const theme = createTheme({
         },
       },
     },
-    MuiTreeItem: {
+    MuiDialogTitle: {
       styleOverrides: {
-        label: {
-          fontSize: "13px",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
+        // Name of the slot
+        root: {
+          padding: "10px 15px",
+          background: "#000000d6",
+          color: "#ffffff",
+          fontSize: "16px",
         },
       },
-    }
+    },
   },
 });
 
