@@ -49,7 +49,7 @@ function SetupPage({ api }) {
       setTemplate(<></>);
       handleContextDataChange([], "treeData");
       api.get(
-        "StaffReady/v10/api/tree/" + setupPageData.activeTab + "/documents",
+        "/StaffReady/v10/api/tree/" + setupPageData.activeTab + "/documents",
         (results) => {
           const tempData = { ...setupPageData };
           tempData["treeData"] = results;
