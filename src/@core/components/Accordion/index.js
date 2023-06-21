@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import MuiAccordion from "@mui/material/Accordion";
+import MuiAccordion, { accordionClasses } from "@mui/material/Accordion";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
@@ -7,14 +7,24 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import StatusIcon from "../icon/StatusIcon";
 
-const Accordion = styled((props) => (
+const Accordion = styled(({ hideHeader, ...props }) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
-))(({ theme }) => ({
-  border: `1px solid ${theme.palette.divider}`,
-  "&:before": {
-    display: "none",
-  },
-}));
+))(({ theme, hideHeader }) => {
+  return {
+
+    [`&.${accordionClasses.root}`]: {
+      ".MuiAccordionSummary-root": {
+        display: hideHeader ? 'none' : 'static',
+      }
+    },
+
+    border: `1px solid ${theme.palette.divider}`,
+    "&:before": {
+      display: "none",
+    },
+  }
+
+});
 
 const AccordionSummary = styled((props) => <MuiAccordionSummary {...props} />)(
   ({ theme }) => ({
@@ -31,11 +41,20 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: "1px solid rgba(0, 0, 0, .125)",
 }));
 
-export default function AccordionComponent({ item, isLoading }) {
-  const [expanded, setExpanded] = useState(false);
+function AccordionComponent({ item, isLoading }) {
+  const configs = item.configs;
+
+  const [expanded, setExpanded] = useState(() => {
+    return !!configs?.alwaysExpanded
+  });
+
+  const [loading, setLoading] = useState(() => configs?.noLoading ? false : isLoading)
+
 
   const handleChange = (flag) => {
-    setExpanded(flag);
+    if (!configs?.alwaysExpanded) {
+      setExpanded(flag);
+    }
   };
 
   return (
@@ -44,21 +63,31 @@ export default function AccordionComponent({ item, isLoading }) {
       key={item.key}
       expanded={expanded}
       onChange={() => handleChange(!expanded)}
+      hideHeader={!!configs?.hideHeader}
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls={item.key + "-content"}
         id={item.key + "-header"}
       >
-        <StatusIcon key={item.pk} module={item.module} id={item.id} pk={item.pk} />
+        {!configs?.noIcon ?
+          <StatusIcon key={item.pk} module={item.module} id={item.id} pk={item.pk} />
+          :
+          null
+
+        }
         <Typography sx={{ width: "33%", flexShrink: 0 }}>
-          {isLoading ? "Loading..." : item.title}
+          {loading ? "Loading..." : item.title}
         </Typography>
         <Typography sx={{ color: "text.secondary" }}>
-          {!isLoading && item.description}
+          {!loading && item.description}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>{expanded && item.body}</AccordionDetails>
     </Accordion>
   );
 }
+
+AccordionComponent.displayName = 'AccordionComponent'
+
+export default AccordionComponent

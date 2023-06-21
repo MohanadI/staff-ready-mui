@@ -9,6 +9,7 @@ import StepWizard from "../../../../../../../@core/components/StepWizard/StepWiz
 import { BulkEditContext } from "../../../Context";
 import { useState } from "react";
 import { bulkEditConfigs } from "../BulkEditConfigs";
+import isEmpty from "lodash/isEmpty";
 
 const BulkEditModal = (props) => {
     const { isOpen, onClose } = props;
@@ -21,7 +22,20 @@ const BulkEditModal = (props) => {
             selectedRows
         },
         methods: {
-            setSelectedRows
+            setSelectedRows,
+        }
+    }
+
+    async function onNextClicked(actions, stepNo) {
+        if (stepNo === 1) {
+            const form = contextVal.docPropFormRef?.current;
+            form.submitForm?.(() => {
+                actions.nextStep();
+            })()
+
+        } else {
+            actions.nextStep()
+
         }
     }
 
@@ -52,9 +66,9 @@ const BulkEditModal = (props) => {
                                             Back
                                         </Button>
                                         <Button
-                                            onClick={() => actions.nextStep()}
                                             variant={'outlined'}
                                             sx={{ ml: 0.5 }}
+                                            onClick={() => onNextClicked(actions, stepNo)}
                                         >
                                             Next
                                         </Button>

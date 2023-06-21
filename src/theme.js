@@ -15,6 +15,11 @@ const theme = createTheme({
       main: red.A400,
     },
   },
+  form: {
+    errorMsgFontSize: '12px',
+    errorMsgColor: red['A700'],
+    errorMsgTopSpace: '4px'
+  },
   components: {
     // Name of the component
     MuiButton: {
@@ -36,7 +41,7 @@ const theme = createTheme({
         },
         input: {
           fontSize: "0.85rem",
-          padding: "7px !important",
+          // padding: "7px !important",
         },
       },
     },

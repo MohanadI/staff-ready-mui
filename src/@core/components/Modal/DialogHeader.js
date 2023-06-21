@@ -9,7 +9,7 @@ const DialogHeader = (props) => {
     const { children, onClose, ...other } = props;
 
     return (
-        <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+        <DialogTitle sx={{ mb: 2, p: 2, border: (theme) => `1px solid ${theme.palette.grey[300]}` }} {...other}>
             {children}
             {onClose ? (
                 <IconButton

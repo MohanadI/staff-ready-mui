@@ -4,6 +4,8 @@ import { useLocationAPI } from "./location";
 import axios from "axios";
 import { useDocumentImproveAPI } from "./documentimprove";
 import { useSubjectApi } from './subject';
+import { useClassificationAPI } from './classificaiton';
+import { useCommonAPI } from './common';
 
 /**
 * Base of the React API client
@@ -33,7 +35,7 @@ export const useAPI = () => {
                 })
                 .catch((error) => {
                     console.error(error);
-                    //addToast("Error loading data", {appearance: 'error', autoDismiss: false})
+                    //addToast("Error loading  data", {appearance: 'error', autoDismiss: false})
                     errorCallback && errorCallback(error);
                     return error;
                 })
@@ -58,6 +60,8 @@ function withAPI(Component, enabledAPIs) {
         useLocationAPI(api, enabledAPIs)
         useDocumentImproveAPI(api, enabledAPIs)
         useSubjectApi(api, enabledAPIs)
+        useClassificationAPI(api, enabledAPIs);
+        useCommonAPI(api, enabledAPIs);
 
         return (
             <Component

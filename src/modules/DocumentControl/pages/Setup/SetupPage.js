@@ -16,9 +16,10 @@ import LocationTemplate from "./PageTemplates/LocationTemplate";
 import CustomTree from "../../../../@core/components/CustomTree/CustomTree";
 import CustomTabs from "../../../../@core/components/CustomTabs/CustomTabs";
 import { setupTabs } from "../../configs/TabsConstant";
-import withAPI from "../../../../api/core";
 import useWindowSize from "../../../../@core/hooks/useWindowSize";
+import { findObjectById } from "../../../../@core/utils/GeneralUtils";
 import TreeIcon from "../../../../@core/components/icon/TreeIcon";
+import withAPI from "../../../../api/core";
 
 function SetupPage({ api }) {
   const [template, setTemplate] = useState(<></>);
@@ -97,6 +98,10 @@ function SetupPage({ api }) {
               data={setupPageData.treeData}
               isLoading={isLoading}
               tabsConfig={setupTabs}
+              onNodeSelect={(e, node, treeData) => {
+                const match = findObjectById(treeData, node);
+                handleContextDataChange(match, "selectedNode");
+              }}
               context={Context}
             />
           </Grid>

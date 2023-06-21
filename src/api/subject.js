@@ -8,4 +8,9 @@ export const useSubjectApi = (api, enableAPIs) => {
         return api.get(url);
     }
 
+    api.subject.get = (callback, errorCallback) => {
+        const url = `StaffReady/v10/api/tree/subjects`
+        return api.get(url, callback, errorCallback);
+    }
+
 }

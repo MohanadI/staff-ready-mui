@@ -6,6 +6,7 @@ import SubjectDocumentBody from "./Body/SubjectDocumentBody";
 import SubjectBody from "./Body/SubjectBody";
 import withAPI from "../../../../../../api/core";
 
+
 function SubjectTemplate({ api }) {
   const [isLoading, setIsLoading] = useState(false);
   const [subjectID, setSubjectID] = useState(null);
@@ -20,6 +21,15 @@ function SubjectTemplate({ api }) {
   }, [setupPageData]);
 
   const panels = [
+    // {
+    //   key: 'subject_search',
+    //   title: "Subject Search",
+    //   module: 'documentcontrol',
+    //   id: 'subject',
+    //   body: <div>Test search template</div>,
+    //   configs: { alwaysExpanded: true, noLoading: true, noIcon: true, hideHeader: true }
+
+    // },
     {
       key: "subject",
       title: "Subject",
@@ -39,6 +49,7 @@ function SubjectTemplate({ api }) {
       description: "",
       body: <SubjectDocumentBody node={setupPageData.selectedNode} />,
     },
+
   ];
 
   return (

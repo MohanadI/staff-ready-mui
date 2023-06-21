@@ -6,6 +6,8 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import BulkEditModal from '../SubComp/BulkEditModal';
+import { Link } from 'react-router-dom'
+import { Typography } from '@mui/material';
 
 
 
@@ -58,12 +60,24 @@ function SubjectDocumentBody(props) {
           columns={
             [
               {
-                field: 'subject',
-                headerName: 'Subject',
+                field: 'name',
+                headerName: 'Document Name',
                 flex: 1,
-                valueGetter: (params) => {
-                  return params?.row?.subject?.id
-                },
+                renderCell: (params) => {
+                  const row = params?.row
+                  return (
+                    <Link style={{ width: '100%' }} to={`/documentcontrol/setup/subjects/document/${row.improvePk}`}>
+                      <Typography
+                        sx={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
+                        title={row.description}
+                      >
+                        {row.description}
+
+                      </Typography>
+                    </Link>
+                  )
+                }
+
               },
               {
                 field: 'id',
@@ -71,9 +85,12 @@ function SubjectDocumentBody(props) {
                 flex: 1,
               },
               {
-                field: 'name',
-                headerName: 'Name',
+                field: 'subject',
+                headerName: 'Subject',
                 flex: 1,
+                valueGetter: (params) => {
+                  return params?.row?.subject?.id
+                },
               },
               {
                 field: 'description',

@@ -1,3 +1,4 @@
+import BulkEditDocumentProperties from "./SubComp/BulkEditDocumentProperties";
 import BulkEditSelectDocuments from "./SubComp/BulkEditSelectDocuments";
 
 export const bulkEditConfigs = [
@@ -7,7 +8,7 @@ export const bulkEditConfigs = [
     },
     {
         label: 'Document Properties',
-        content: <div>step 2</div>
+        content: <BulkEditDocumentProperties />
     },
     {
         label: 'Reviewers',

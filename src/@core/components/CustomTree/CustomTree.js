@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { search_container_style, tree_wrapper } from "./Style.js";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
 import TreeView from "@mui/lab/TreeView";
 import SvgIcon from "@mui/material/SvgIcon";
-import MailIcon from "@mui/icons-material/Mail";
 import StyledTreeItem from "./StyledComponets/StyledTreeItem.js";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -36,33 +35,30 @@ function PlusSquare(props) {
 const CustomTree = (props) => {
   const [treeData, setTreeData] = useState([]);
   const [searchVal, setSearchVal] = useState("");
-  const [expandedIds, setExpandedIds] = useState([]);
-  const { handleContextDataChange } = useContext(props.context);
+  const [expandedIds, setExpandedIds] = useState(props.defaultExpandIds || []);
   const { height } = useWindowSize();
 
+  const { onNodeSelect = (() => { }) } = props
+
   useEffect(() => {
-    setTreeData(props.data);
+    if (props.api) {
+      (async () => {
+        const resp = await props.api();
+        setTreeData(resp.data);
+      })()
+    } else {
+      setTreeData(props.data);
+    }
+
   }, [props.data]);
 
   const renderData = (TreeData, level) => {
-    return TreeData.map((node) => {
-      let label = node.text;
-      let TreeItemLabelWithIcon = (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Box>
-            <TreeIcon type={node.type} />
-          </Box>
-          <Typography variant="body2">{label}</Typography>
-        </Box>
-      );
-      if (
-        node.text?.toUpperCase()?.indexOf(searchVal?.trim()?.toUpperCase()) >
-          -1 &&
-        searchVal
-      ) {
-        const targetIdx = node?.text
-          ?.toUpperCase()
-          ?.indexOf(searchVal?.toUpperCase());
+    return TreeData?.map(node => {
+      let label = node.text
+
+      if (node.text?.toUpperCase()?.indexOf(searchVal?.trim()?.toUpperCase()) > -1 && searchVal) {
+
+        const targetIdx = node?.text?.toUpperCase()?.indexOf(searchVal?.toUpperCase());
 
         const beforeStr = node?.text.substring(0, targetIdx);
         const afterStr = node?.text.slice(targetIdx + searchVal.length);
@@ -84,39 +80,33 @@ const CustomTree = (props) => {
             {afterStr}
           </Box>
         );
+      }
 
-        TreeItemLabelWithIcon = (
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box>
-              <TreeIcon type={node.type} />
-            </Box>
-            {label}
-          </Box>
-        );
+      if (typeof props.nodeFormatter === 'function') {
+        label = props.nodeFormatter(node);
+      }
+
+      let TreeItem = <StyledTreeItem />
+      if (typeof props.styledTreeItem === 'function') {
+        TreeItem = props.styledTreeItem(<StyledTreeItem />)
+      }
+
+      const itemProps = {
+        level,
+        label,
+        key: node.value,
+        nodeId: node.value || '0',
       }
 
       if (node.children) {
-        return (
-          <StyledTreeItem
-            level={level}
-            key={node.value}
-            nodeId={node.value}
-            label={TreeItemLabelWithIcon}
-          >
-            {renderData(node.children, level + 1)}
-          </StyledTreeItem>
-        );
+        itemProps.children = renderData(node.children, level + 1)
+        return React.cloneElement(TreeItem, { ...TreeItem.props, ...itemProps })
       }
-      return (
-        <StyledTreeItem
-          level={level}
-          key={node.value}
-          nodeId={node.value}
-          label={TreeItemLabelWithIcon}
-        />
-      );
-    });
-  };
+
+      return React.cloneElement(TreeItem, { ...TreeItem.props, ...itemProps })
+    })
+
+  }
 
   const searchTree = (
     treeData = [],
@@ -143,8 +133,11 @@ const CustomTree = (props) => {
   const onSearch = (e) => {
     const { value } = e.target;
     const _searchVal = value === "" ? undefined : value;
-    const matchedIds = [];
+    let matchedIds = !_searchVal ? props.defaultExpandIds : [];
     searchTree(treeData, null, _searchVal, matchedIds);
+    if (matchedIds.length === 0) {
+      matchedIds = props.defaultExpandIds;
+    }
 
     setExpandedIds(matchedIds);
     setSearchVal(value);
@@ -155,48 +148,38 @@ const CustomTree = (props) => {
     onSearch({ target: { value: "" } });
   };
 
-  const findObjectById = (objects, id) => {
-    let match = objects.find((obj) => obj.value === id);
-    if (match) {
-      return match;
-    }
 
-    for (const obj of objects) {
-      if (obj.children && obj.children.length > 0) {
-        match = findObjectById(obj.children, id);
-        if (match) {
-          return match;
-        }
-      }
-    }
-
-    return null;
-  };
 
   return (
     <Box sx={tree_wrapper}>
-      <Box sx={search_container_style}>
-        <Grid container spacing={1}>
-          <Grid item xs={12} md={9}>
-            <TextField
-              size="small"
-              onChange={onSearch}
-              value={searchVal}
-              sx={{ width: "100%" }}
-            />
+      {!props.hideFilter ?
+
+        <Box sx={search_container_style}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} md={9}>
+              <TextField
+                size="small"
+                onChange={onSearch}
+                value={searchVal}
+                sx={{ width: "100%" }}
+                placeholder="search"
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Button
+                sx={{ minWidth: "100%", height: "100%" }}
+                size="small"
+                variant="outlined"
+                onClick={resetSearch}
+              >
+                Reset
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={3}>
-            <Button
-              sx={{ minWidth: "100%", height: "100%" }}
-              size="small"
-              variant="outlined"
-              onClick={resetSearch}
-            >
-              Reset
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
+        </Box>
+        : null
+
+      }
       <PerfectScrollbar style={{ height: height - 250 }}>
         {props.isLoading ? (
           <div style={{ textAlign: "center" }}>
@@ -208,10 +191,7 @@ const CustomTree = (props) => {
             defaultCollapseIcon={<MinusSquare />}
             defaultExpandIcon={<PlusSquare />}
             expanded={expandedIds}
-            onNodeSelect={(e, node) => {
-              const match = findObjectById(treeData, node);
-              handleContextDataChange(match, "selectedNode");
-            }}
+            onNodeSelect={(e, node) => onNodeSelect(e, node, treeData)}
             onNodeToggle={(e, nodeIds) => setExpandedIds(nodeIds)}
             classes={{ root: "my-custom-tree-view" }} // add classes prop here
           >
