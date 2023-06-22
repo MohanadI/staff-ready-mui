@@ -55,7 +55,14 @@ const CustomTree = (props) => {
   const renderData = (TreeData, level) => {
     return TreeData?.map(node => {
       let label = node.text
-
+      let TreeItemLabelWithIcon = (
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box>
+            <TreeIcon type={node.type} />
+          </Box>
+          <Typography variant="body2">{label}</Typography>
+        </Box>
+      );
       if (node.text?.toUpperCase()?.indexOf(searchVal?.trim()?.toUpperCase()) > -1 && searchVal) {
 
         const targetIdx = node?.text?.toUpperCase()?.indexOf(searchVal?.toUpperCase());
@@ -70,20 +77,27 @@ const CustomTree = (props) => {
         label = (
           <Box>
             {beforeStr}
-            <Typography
-              variant="body2"
-              display={"inline-block"}
-              sx={{ color: "#ea6241", fontWeight: "bold" }}
-            >
+            <span style={{ color: "#ea6241", fontWeight: "bold" }}>
               {originalText}
-            </Typography>
+            </span>
             {afterStr}
           </Box>
         );
       }
 
+      TreeItemLabelWithIcon = (
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box>
+            <TreeIcon type={node.type} />
+          </Box>
+          {label}
+        </Box>
+      );
+
       if (typeof props.nodeFormatter === 'function') {
         label = props.nodeFormatter(node);
+      } else {
+        label = TreeItemLabelWithIcon
       }
 
       let TreeItem = <StyledTreeItem />
@@ -135,7 +149,7 @@ const CustomTree = (props) => {
     const _searchVal = value === "" ? undefined : value;
     let matchedIds = !_searchVal ? props.defaultExpandIds : [];
     searchTree(treeData, null, _searchVal, matchedIds);
-    if (matchedIds.length === 0) {
+    if (matchedIds?.length === 0) {
       matchedIds = props.defaultExpandIds;
     }
 

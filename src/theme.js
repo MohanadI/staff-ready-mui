@@ -41,7 +41,7 @@ const theme = createTheme({
         },
         input: {
           fontSize: "0.85rem",
-          // padding: "7px !important",
+          padding: "9px",
         },
       },
     },
