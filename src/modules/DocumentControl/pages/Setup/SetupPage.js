@@ -6,13 +6,6 @@ import { Button, Divider, LinearProgress } from "@mui/material";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
 import Context from "./Context";
-import SubjectTemplate from "./PageTemplates/Subject/SubjectTemplate";
-import DocumentsTemplate from "./PageTemplates/Documents/DocumentsTemplate";
-import RevisionTemplate from "./PageTemplates/Revision/RevisionTemplate";
-import ClassificationFolderTemplate from "./PageTemplates/ClassificationFolderTemplate";
-import ClassificationTemplate from "./PageTemplates/ClassificationTemplate";
-import SiteTemplate from "./PageTemplates/SiteTemplate";
-import LocationTemplate from "./PageTemplates/LocationTemplate";
 import CustomTree from "../../../../@core/components/CustomTree/CustomTree";
 import CustomTabs from "../../../../@core/components/CustomTabs/CustomTabs";
 import { setupTabs } from "../../configs/TabsConstant";
@@ -20,66 +13,128 @@ import useWindowSize from "../../../../@core/hooks/useWindowSize";
 import { findObjectById } from "../../../../@core/utils/GeneralUtils";
 import TreeIcon from "../../../../@core/components/icon/TreeIcon";
 import withAPI from "../../../../api/core";
+import SubjectTemplate from "./PageTemplates/Subject/SubjectTemplate";
+import DocumentsTemplate from "./PageTemplates/Documents/DocumentsTemplate";
+import RevisionTemplate from "./PageTemplates/Revision/RevisionTemplate";
+import ClassificationFolderTemplate from "./PageTemplates/ClassificationFolderTemplate";
+import ClassificationTemplate from "./PageTemplates/ClassificationTemplate";
+import SiteTemplate from "./PageTemplates/SiteTemplate";
+import LocationTemplate from "./PageTemplates/LocationTemplate";
+import ModalWithTabs from "../../../../@core/components/Modal/ModalWithTabs";
+
+const AddComponentTypes = {
+  subject: {
+    title: "Add Subject or Document",
+    tabs: [
+      {
+        title: "Document",
+        body: <>Document</>,
+      },
+      {
+        title: "Subject",
+        body: <>Subject</>,
+      },
+    ],
+  },
+  classification: {
+    title: "Add Classification",
+    tabs: [
+      {
+        title: "Document",
+        body: <>Classification</>,
+      },
+    ],
+  },
+  location: {
+    title: "Add Site or Location",
+    tabs: [
+      {
+        title: "Site",
+        body: <>Site</>,
+      },
+      {
+        title: "Location",
+        body: <>Location</>,
+      },
+    ],
+  },
+};
+
+const DocumentControlTemplates = {
+  subject: <SubjectTemplate />,
+  document: <DocumentsTemplate />,
+  revision: <RevisionTemplate />,
+  classification_folder: <ClassificationFolderTemplate />,
+  classification: <ClassificationTemplate />,
+  site: <SiteTemplate />,
+  location: <LocationTemplate />,
+};
 
 function SetupPage({ api }) {
-  const [template, setTemplate] = useState(<></>);
-  const [isLoading, setIsLoading] = useState(false);
   const { height } = useWindowSize();
-  const [setupPageData, setSetupPageData] = useState({
+
+  const [state, setState] = useState({
     activeTab: "subject",
     selectedNode: {
       type: "",
       value: null,
     },
     treeData: [],
+    addComponentData: AddComponentTypes.subject,
+    isLoading: false,
+    openAddModal: false,
   });
 
-  const DocumentControlTemplates = {
-    subject: <SubjectTemplate />,
-    document: <DocumentsTemplate />,
-    revision: <RevisionTemplate />,
-    classification_folder: <ClassificationFolderTemplate />,
-    classification: <ClassificationTemplate />,
-    site: <SiteTemplate />,
-    location: <LocationTemplate />,
-  };
-
-  useEffect(() => {
-    if (setupPageData.activeTab) {
-      setIsLoading(true);
-      setTemplate(<></>);
-      handleContextDataChange([], "treeData");
-      api.get(
-        "/StaffReady/v10/api/tree/" + setupPageData.activeTab + "/documents",
-        (results) => {
-          const tempData = { ...setupPageData };
-          tempData["treeData"] = results;
-          tempData["selectedNode"] = results.length > 0 ? results[0] : {};
-          setSetupPageData(tempData);
-          setIsLoading(false);
-        }
-      );
-    }
-  }, [setupPageData.activeTab]);
-
-  useEffect(() => {
-    if (setupPageData.selectedNode?.type) {
-      const tempTemplate =
-        DocumentControlTemplates[setupPageData.selectedNode?.type];
-      setTemplate(tempTemplate);
-    }
-  }, [setupPageData.selectedNode]);
-
   const handleContextDataChange = (value, key) => {
-    const tempData = { ...setupPageData };
-    tempData[key] = value;
-    setSetupPageData(tempData);
+    setState((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
   };
 
+  useEffect(() => {
+    const { activeTab } = state;
+
+    if (activeTab) {
+      setState((prevState) => ({
+        ...prevState,
+        isLoading: true,
+        template: <></>,
+        addComponentData: AddComponentTypes[activeTab],
+      }));
+
+      handleContextDataChange([], "treeData");
+
+      api.get(`/StaffReady/v10/api/tree/${activeTab}/documents`, (results) => {
+        setState((prevState) => ({
+          ...prevState,
+          treeData: results,
+          selectedNode: results.length > 0 ? results[0] : {},
+          isLoading: false,
+        }));
+      });
+    }
+  }, [state.activeTab]);
+
+  useEffect(() => {
+    const { selectedNode } = state;
+
+    if (selectedNode?.type) {
+      const tempTemplate = DocumentControlTemplates[selectedNode.type];
+      setState((prevState) => ({
+        ...prevState,
+        template: tempTemplate,
+      }));
+    }
+  }, [state.selectedNode]);
+
+  const { template, isLoading } = state;
+
+  console.log(state.addComponentData);
   return (
     <Context.Provider
       value={{
-        setupPageData,
+        setupPageData: state,
         handleContextDataChange,
       }}
     >
@@ -90,12 +145,32 @@ function SetupPage({ api }) {
               <CustomTabs tabsConfig={setupTabs} context={Context} />
             </Box>
             <Grid item xs={12} sx={{ mb: 1.5 }}>
-              <Button variant="outlined" size="small" sx={{ width: "100%" }}>
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{ width: "100%" }}
+                onClick={() =>
+                  setState((prevState) => ({
+                    ...prevState,
+                    openAddModal: true,
+                  }))
+                }
+              >
                 Add
               </Button>
             </Grid>
+            <ModalWithTabs
+              open={state.openAddModal}
+              data={state.addComponentData}
+              onClose={() =>
+                setState((prevState) => ({
+                  ...prevState,
+                  openAddModal: false,
+                }))
+              }
+            />
             <CustomTree
-              data={setupPageData.treeData}
+              data={state.treeData}
               isLoading={isLoading}
               tabsConfig={setupTabs}
               onNodeSelect={(e, node, treeData) => {
@@ -106,18 +181,17 @@ function SetupPage({ api }) {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={9} lg={9}>
-            {isLoading ? (
-              <LinearProgress />
-            ) : (
+            {isLoading && <LinearProgress />}
+            {!isLoading && (
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Box>
                   <TreeIcon
                     size={{ width: 30, height: 30 }}
-                    type={setupPageData.selectedNode?.type}
+                    type={state.selectedNode?.type}
                   />
                 </Box>
                 <Typography variant="h5" gutterBottom>
-                  {setupPageData.selectedNode?.text}
+                  {state.selectedNode?.text}
                 </Typography>
               </Box>
             )}
