@@ -29,7 +29,7 @@ const BulkEditModal = (props) => {
     async function onNextClicked(actions, stepNo) {
         if (stepNo === 1) {
             const form = contextVal.docPropFormRef?.current;
-            form.submitForm?.(() => {
+            form.submitForm?.((data) => {
                 actions.nextStep();
             })()
 

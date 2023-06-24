@@ -5,7 +5,6 @@ import React from 'react';
 import { Box } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import Style from './Style';
-import TreeSelection from '../TreeSelection/TreeSelection';
 
 
 
@@ -49,14 +48,19 @@ export function calcColWidth(colPerRow, fieldsCount) {
     return _colWidth;
 }
 
-export function processingFormField(fields, theme, formHookProps) {
+export function processingFormField(fields, theme, formHookProps, initData) {
     const style = Style(theme);
 
     const { control, register } = formHookProps
 
     const _fields = fields.map(element => {
-        let { validation = {} } = element;
+        let { validation = {}, name } = element;
         validation = formatValidationMessage(validation)
+
+        if (initData?.[name]) {
+            formHookProps.setValue(name, initData[name])
+        }
+
         if (isThirdPartyComponent(element?.comp)) {
             return ((formState) => {
                 const { errors } = formState
@@ -105,7 +109,8 @@ export function processingFormField(fields, theme, formHookProps) {
                 const { errors } = formState
 
                 const comp = element?.comp;
-                const name = element?.name
+                const name = element?.name;
+
                 return <>
                     {React.cloneElement(comp, { ...comp.props, register, formComp: true, validation, name, ...formHookProps })}
 

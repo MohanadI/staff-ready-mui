@@ -12,7 +12,7 @@ import { isEqual } from 'lodash';
 
 const Form = React.forwardRef((props, ref) => {
 
-    const { colPerRow, fields, actions, defaultValues, mode = "onTouched", onChange, onChangeDep, onSubmit, exposeUtils } = props;
+    const { colPerRow, fields, actions, defaultValues, mode = "onTouched", onChange, onChangeDep, onSubmit, initData } = props;
 
     const [defaultVal] = useState(() => getDefaultValues(defaultValues, fields));
     const [colWidth, setColWidth] = useState(4);
@@ -24,7 +24,7 @@ const Form = React.forwardRef((props, ref) => {
 
     useEffect(() => {
 
-        const _fields = processingFormField(fields, theme, restFormProps);
+        const _fields = processingFormField(fields, theme, restFormProps, initData);
         setFieldsComp(_fields);
 
     }, [props.fields])
@@ -81,8 +81,6 @@ const Form = React.forwardRef((props, ref) => {
         if (typeof onSubmit === 'function') {
             onSubmit(result);
         }
-        return "test"
-
     }
 
 

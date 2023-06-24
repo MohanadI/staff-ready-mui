@@ -10,10 +10,23 @@ import EmployeeNameForm from './SelectEmployeeModal/SubComp/EmployeeNameForm';
 import withAPI from '../../../api/core';
 import { CustomStyledTreeItem } from './Style';
 import CustomTree from '../CustomTree/CustomTree';
+import { extractValueFromObjPath } from '../../utils/GeneralUtils';
 
 const TreeSelection = React.forwardRef((props, ref) => {
 
-    const { label, api, expandFirstNode, selectionType, customTopLevelData, setValue, name, trigger, mode } = props;
+    const { label,
+        api,
+        expandFirstNode,
+        selectionType,
+        customTopLevelData,
+        setValue,
+        name,
+        trigger,
+        mode,
+        validation,
+        getValues,
+        displayPortion = 'text'
+    } = props;
 
     const [isOpen, setIsOpen] = useState(false);
     const [selectedData, setSelectedData] = useState({ text: '[no set]', value: '' });
@@ -32,6 +45,9 @@ const TreeSelection = React.forwardRef((props, ref) => {
 
     }
 
+    const value = getValues(name);
+
+    const displayLabel = extractValueFromObjPath(displayPortion, value);
 
     return (<Box>
         <FormControl required={true}>
@@ -43,11 +59,11 @@ const TreeSelection = React.forwardRef((props, ref) => {
                 onClick={openModal}
                 sx={{ cursor: 'pointer' }}
             >
-                {selectedData.text}
+                {displayLabel}
             </Link>
         </FormControl>
 
-        <input type='hidden' value={selectedData.value} {...props.register(props.name, { ...props.validation })} />
+        <input type='hidden'{...props.register(props.name, { ...validation })} />
 
         {mode !== 'menu' ?
             <TreeSelectionModal
