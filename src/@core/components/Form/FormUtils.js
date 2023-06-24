@@ -57,7 +57,7 @@ export function processingFormField(fields, theme, formHookProps, initData) {
         let { validation = {}, name } = element;
         validation = formatValidationMessage(validation)
 
-        if (initData[name]) {
+        if (initData?.[name]) {
             formHookProps.setValue(name, initData[name])
         }
 
