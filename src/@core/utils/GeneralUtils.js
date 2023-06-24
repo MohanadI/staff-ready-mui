@@ -35,3 +35,11 @@ export const findObjectById = (objects, id) => {
 
     return null;
 };
+
+export const extractValueFromObjPath = (path, object) => {
+    const pathArr = path?.split('.');
+
+    return pathArr.reduce((acc, pathPortion) => {
+        return acc[pathPortion];
+    }, object);
+}

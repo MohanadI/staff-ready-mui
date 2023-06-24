@@ -67,7 +67,6 @@ const AutoCompleteComp = (props) => {
             options={options}
             loading={loadingOpt}
             loadingText="loading..."
-
             {...rest}
         />
     )
@@ -79,7 +78,7 @@ const AutoCompleteComp = (props) => {
                     control={props.control}
                     name={rest?.name}
                     render={({ field }) => {
-                        const { onChange: formOnChange, value, ...restFormProps } = field
+                        const { onChange: formOnChange, ...restFormProps } = field
                         const originalOnChange = rest?.onChange || (() => { })
 
 

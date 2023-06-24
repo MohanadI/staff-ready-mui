@@ -36,6 +36,7 @@ const BulkEditDocumentProperties = (props) => {
                                 api={api.classification.get}
                                 expandFirstNode={true}
                                 selectionType="classification"
+                                displayPortion="text"
                             />
                         ),
                         name: 'classification',
@@ -48,6 +49,7 @@ const BulkEditDocumentProperties = (props) => {
                                 api={api.subject.get}
                                 selectionType="subject"
                                 expandFirstNode={true}
+                                displayPortion="text"
                                 customTopLevelData={{
                                     value: '0',
                                     text: 'Subject (top level)',
@@ -65,6 +67,7 @@ const BulkEditDocumentProperties = (props) => {
                                 label={'Document Owner'}
                                 validation={{ required: true }}
                                 mode="menu"
+                                displayPortion="text"
                             />
                         ),
                         name: 'documentOwner',
@@ -116,15 +119,7 @@ const BulkEditDocumentProperties = (props) => {
                         )
                     }
                 ]}
-
-            // actions={[{
-            //     comp: <Button type="submit" variant="outlined">
-            //         submit
-            //     </Button>,
-            //     type: 'submit'
-            // }]}
             />
-
         </Box>
     )
 
