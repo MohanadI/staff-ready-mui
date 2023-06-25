@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-/** Emotion Styled Components */
 const StyledDialogTitle = styled(DialogTitle)`
   display: flex;
   align-items: center;
@@ -33,18 +32,23 @@ const TabContainer = styled(Box)`
 `;
 
 const StyledTabs = styled(Tabs)`
-  background: #292929;
-
+  background: #58595f;
 `;
 
 const StyledTab = styled(Tab)`
   border-bottom: 1px solid #ffffff;
   color: #ffffff;
+  min-height: auto;
+  &.Mui-selected {
+    background: #faebd7;
+  }
 `;
 
 const ContentBox = styled(Box)`
   width: 70%;
-  padding: 16px;
+  &.full-width {
+    width: 100%;
+  }
 `;
 
 function ModalWithTabs({ data, open, onClose }) {
@@ -74,8 +78,8 @@ function ModalWithTabs({ data, open, onClose }) {
         <StyledIconButton
           color="inherit"
           onClick={() => {
-            setSelectedTab(0);
             onClose();
+            setSelectedTab(0);
           }}
         >
           <CloseIcon />
@@ -99,7 +103,9 @@ function ModalWithTabs({ data, open, onClose }) {
             </TabContainer>
           )}
 
-          <ContentBox>{data.tabs[selectedTab].body}</ContentBox>
+          <ContentBox className={data.tabs.length === 1 ? "full-width" : ""}>
+            {data.tabs[selectedTab].body}
+          </ContentBox>
         </Box>
       </StyledDialogContent>
     </Dialog>

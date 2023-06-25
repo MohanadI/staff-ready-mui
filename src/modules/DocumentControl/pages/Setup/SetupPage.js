@@ -21,6 +21,11 @@ import ClassificationTemplate from "./PageTemplates/ClassificationTemplate";
 import SiteTemplate from "./PageTemplates/SiteTemplate";
 import LocationTemplate from "./PageTemplates/LocationTemplate";
 import ModalWithTabs from "../../../../@core/components/Modal/ModalWithTabs";
+import DocumentAddForm from "./Components/DocumentAddForm";
+import SubjectAddForm from "./Components/SubjectAddForm";
+import ClassificationAddForm from "./Components/ClassificationAddForm";
+import SiteAddForm from "./Components/SiteAddForm";
+import LocationAddForm from "./Components/LocationAddForm";
 
 const AddComponentTypes = {
   subject: {
@@ -28,11 +33,11 @@ const AddComponentTypes = {
     tabs: [
       {
         title: "Document",
-        body: <>Document</>,
+        body: <DocumentAddForm />,
       },
       {
         title: "Subject",
-        body: <>Subject</>,
+        body: <SubjectAddForm />,
       },
     ],
   },
@@ -40,8 +45,8 @@ const AddComponentTypes = {
     title: "Add Classification",
     tabs: [
       {
-        title: "Document",
-        body: <>Classification</>,
+        title: "Classification",
+        body: <ClassificationAddForm />,
       },
     ],
   },
@@ -50,11 +55,37 @@ const AddComponentTypes = {
     tabs: [
       {
         title: "Site",
-        body: <>Site</>,
+        body: <SiteAddForm />,
       },
       {
         title: "Location",
-        body: <>Location</>,
+        body: <LocationAddForm />,
+      },
+    ],
+  },
+  classification_document: {
+    title: "Add Classification or Document",
+    tabs: [
+      {
+        title: "Classification",
+        body: <ClassificationAddForm />,
+      },
+      {
+        title: "Document",
+        body: <DocumentAddForm />,
+      },
+    ],
+  },
+  location_document: {
+    title: "Add Location or Document",
+    tabs: [
+      {
+        title: "Document",
+        body: <DocumentAddForm />,
+      },
+      {
+        title: "Location",
+        body: <LocationAddForm />,
       },
     ],
   },
@@ -117,10 +148,31 @@ function SetupPage({ api }) {
   }, [state.activeTab]);
 
   useEffect(() => {
-    const { selectedNode } = state;
+    const { selectedNode, activeTab } = state;
+    const type = selectedNode?.type;
+    if (type) {
+      if (
+        (type === "document" ||
+          type === "classification" ||
+          type === "revision") &&
+        activeTab === "classification"
+      ) {
+        setState((prevState) => ({
+          ...prevState,
+          addComponentData: AddComponentTypes["classification_document"],
+        }));
+      }
+      if (
+        (type === "document" || type === "location") &&
+        activeTab === "location"
+      ) {
+        setState((prevState) => ({
+          ...prevState,
+          addComponentData: AddComponentTypes["location_document"],
+        }));
+      }
 
-    if (selectedNode?.type) {
-      const tempTemplate = DocumentControlTemplates[selectedNode.type];
+      const tempTemplate = DocumentControlTemplates[type];
       setState((prevState) => ({
         ...prevState,
         template: tempTemplate,
@@ -130,7 +182,6 @@ function SetupPage({ api }) {
 
   const { template, isLoading } = state;
 
-  console.log(state.addComponentData);
   return (
     <Context.Provider
       value={{

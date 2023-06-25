@@ -39,7 +39,9 @@ export const useCommonAPI = (api, enabledAPIs) => {
         return api.get(url, callback, callbackError);
     }
 
-
-
+    api.common.documentTypes = (callback, callbackError) => {
+        const url = `/StaffReady/v10/api/document/types`;
+        return api.get(url, callback, callbackError)
+    }
 
 }
