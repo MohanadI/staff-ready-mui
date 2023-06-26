@@ -11,6 +11,7 @@ import withAPI from "../../../../../api/core";
 import Form from "../../../../../@core/components/Form/Form";
 import AutoCompleteComp from "../../../../../@core/components/AutoCompleteComp/AutoCompleteComp";
 import TreeSelection from "../../../../../@core/components/TreeSelection/TreeSelection";
+import SelectWithTreeOptions from "../../../../../@core/components/TreeSelect";
 
 const LoadingContainer = styled(Box)`
   display: flex;
@@ -22,6 +23,8 @@ const LoadingContainer = styled(Box)`
 function DocumentAddForm({ api }) {
   const formRef = useRef("");
   const [isLoading, setIsLoading] = useState(true);
+  const [locationPks, setLocationPks] = useState([]);
+  const [selectedLocationValue, setSelectedLocationValue] = useState({});
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -30,27 +33,6 @@ function DocumentAddForm({ api }) {
 
     return () => clearTimeout(timer);
   }, []);
-
-  /*
-documentType
-:
-"File or URL"
-locationPks
-:
-["-2147477988"]
-name
-:
-"asdasd"
-parentPk
-:
-"-2147481844"
-reviewFrequency
-:
-"1 Year Interval"
-subjectPk
-:
-"-2147483460"
-  */
   const save = (data) => {
     api.subject.create_document(
       data,
@@ -110,17 +92,17 @@ subjectPk
               },
               {
                 comp: (
-                  <AutoCompleteComp
-                    size={"small"}
-                    mode={"lookup"}
-                    api={api.common.documentTypes}
-                    label={"Locations"}
-                    renderOption={(props, option) => {
-                      return <Box {...props}>{option}</Box>;
+                  <SelectWithTreeOptions
+                    onChange={(selectedNode, updatedData, selectedNodes) => {
+                      setSelectedLocationValue(selectedNode);
                     }}
-                    isOptionEqualToValue={(option, value) => {
-                      return option === value;
-                    }}
+                    multiSelect={true}
+                    selectedNodePk={selectedLocationValue}
+                    url="/StaffReady/v10/api/site/tree"
+                    selectableType="location"
+                    displayParentSelected={true}
+                    placeholder="Choose one or more"
+                    loadImmediate={true}
                   />
                 ),
                 name: "locationPks",
