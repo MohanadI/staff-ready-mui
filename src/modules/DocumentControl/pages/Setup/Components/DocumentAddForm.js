@@ -24,7 +24,6 @@ function DocumentAddForm({ api }) {
   const formRef = useRef("");
   const [isLoading, setIsLoading] = useState(true);
   const [locationPks, setLocationPks] = useState([]);
-  const [selectedLocationValue, setSelectedLocationValue] = useState({});
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -34,6 +33,9 @@ function DocumentAddForm({ api }) {
     return () => clearTimeout(timer);
   }, []);
   const save = (data) => {
+    data.locationPks = locationPks.map((item) => item.value);
+    data.parentPk = data.parentPk.value;
+    data.subjectPk = data.subjectPk.value;
     api.subject.create_document(
       data,
       () => {
@@ -93,11 +95,10 @@ function DocumentAddForm({ api }) {
               {
                 comp: (
                   <SelectWithTreeOptions
-                    onChange={(selectedNode, updatedData, selectedNodes) => {
-                      setSelectedLocationValue(selectedNode);
+                    onOptionsChanged={(selectedNodes) => {
+                      setLocationPks(selectedNodes);
                     }}
                     multiSelect={true}
-                    selectedNodePk={selectedLocationValue}
                     url="/StaffReady/v10/api/site/tree"
                     selectableType="location"
                     displayParentSelected={true}

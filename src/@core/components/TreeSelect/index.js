@@ -11,6 +11,7 @@ function SelectWithTreeOptions({
   multiSelect,
   defaultValue,
   value,
+  onOptionsChanged,
   url,
   addTopLevel,
   selectableType,
@@ -33,7 +34,6 @@ function SelectWithTreeOptions({
     api.get(
       url,
       (response) => {
-        console.log(state.treeData, "treeData");
         let addTopLevelTemp;
         if (addTopLevel) {
           addTopLevelTemp = [
@@ -69,8 +69,13 @@ function SelectWithTreeOptions({
     );
   };
 
-  const getFormattedTreeData = (data, parentValue, parentLabel) => {
-    let treeData = [];
+  const getFormattedTreeData = (
+    data,
+    selectedNodePks = null,
+    parentValue,
+    parentLabel
+  ) => {
+    let tempData = [];
     for (let i = 0; i < data.length; i++) {
       const nodeData = data[i];
       const type = nodeData.type;
@@ -80,9 +85,10 @@ function SelectWithTreeOptions({
 
       const selectableType = selectableType || type;
       const disabledParentNode = type !== selectableType;
-      const isNodeSelected = type === selectableType;
+      const isNodeSelected =
+        type === selectableType && isSelectedNode(value, selectedNodePks);
 
-      treeData.push({
+      tempData.push({
         value: value,
         parentValue: parentValue,
         tagLabel: displayParentSelected
@@ -90,16 +96,34 @@ function SelectWithTreeOptions({
           : undefined,
         label: label,
         disabled: disabledParentNode,
+        checked: isNodeSelected,
+        selected: isNodeSelected,
         expanded: multiSelect && isNodeSelected,
         type: type,
-        children: children ? getFormattedTreeData(children, value, label) : [],
+        children: children
+          ? getFormattedTreeData(children, selectedNodePks, value, label)
+          : [],
       });
     }
-    return treeData;
+    return tempData;
+  };
+
+  const isSelectedNode = (nodePk, selectedNodePks) => {
+    if (!selectedNodePks) return false;
+    for (let i = 0; i < selectedNodePks.length; i++) {
+      if (selectedNodePks[i].value === nodePk) return true;
+    }
+    return false;
   };
 
   const onChange = (currentNode, selectedNodes) => {
-    console.log("path::", selectedNodes);
+    let data = getFormattedTreeData(state.treeData, selectedNodes);
+    setState((prevState) => ({
+      ...prevState,
+      treeData: data,
+      selectedNodePks: selectedNodes,
+    }));
+    onOptionsChanged(selectedNodes);
   };
 
   return (
