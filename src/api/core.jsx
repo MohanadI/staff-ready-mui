@@ -40,8 +40,9 @@ export const useAPI = () => {
                     return error;
                 })
         },
-        post: function (url, payload, callback, errorCallback) {
-            return axios.post(url, payload)
+        post: function (url, payload, callback, errorCallback, params) {
+            console.log(params);
+            return axios.post(url, payload, params)
                 .then((response) => {
                     callback && callback(response.data)
                     return response

@@ -150,6 +150,7 @@ function SetupPage({ api }) {
   useEffect(() => {
     const { selectedNode, activeTab } = state;
     const type = selectedNode?.type;
+
     if (type) {
       if (
         (type === "document" ||

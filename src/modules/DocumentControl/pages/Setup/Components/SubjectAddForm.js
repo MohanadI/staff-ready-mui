@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -10,6 +10,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import withAPI from "../../../../../api/core";
 import Form from "../../../../../@core/components/Form/Form";
 import TreeSelection from "../../../../../@core/components/TreeSelection/TreeSelection";
+import Context from "../Context";
 
 const LoadingContainer = styled(Box)`
   display: flex;
@@ -20,15 +21,50 @@ const LoadingContainer = styled(Box)`
 
 function SubjectAddForm({ api }) {
   const formRef = useRef("");
+  const { setupPageData } = useContext(Context);
   const [isLoading, setIsLoading] = useState(true);
+  const [subjectPk, setSubjectPk] = useState("");
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
+      setSubjectPk(setupPageData?.selectedNode.value);
     }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
+
+  const save = (data) => {
+    data.parentPk = data.parentPk.value;
+    api.subject.create_subject(
+      data,
+      () => {
+        console.log("success");
+      },
+      () => {
+        console.log("error");
+      },
+      {
+        params: {
+          auditContextJson: JSON.stringify({
+            auditContextClass:
+              "com.maplewoodsoftware.colorbar.documentcontrol.subject.SubjectColorBar",
+            navigationLabelId: "SubjectPk"
+          }),
+        },
+      }
+    );
+  };
+
+
+  const auditContext = () => {
+    return {
+      auditContextClass:
+        "com.maplewoodsoftware.colorbar.documentcontrol.subject.SubjectColorBar",
+      navigationLabelId: "SubjectPk",
+      navigationPk: subjectPk,
+    };
+  };
 
   return (
     <>
@@ -41,7 +77,7 @@ function SubjectAddForm({ api }) {
           <Typography variant="h5">Subject</Typography>
           <Form
             onSubmit={(formData) => {
-              console.log(formData);
+              save(formData);
             }}
             ref={formRef}
             colPerRow={1}
@@ -61,7 +97,7 @@ function SubjectAddForm({ api }) {
                     validation={{ required: false }}
                   />
                 ),
-                name: "Subject",
+                name: "parentPk",
                 validation: { required: false },
               },
               {
@@ -73,7 +109,7 @@ function SubjectAddForm({ api }) {
                     size={"small"}
                   />
                 ),
-                name: "DocumentName",
+                name: "id",
                 validation: { required: true },
               },
             ]}

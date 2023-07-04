@@ -18,4 +18,9 @@ export const useSubjectApi = (api, enableAPIs) => {
       return api.post(url, payload, callback, errorCallback);
     };
 
+    api.subject.create_subject = (payload, callback, errorCallback, params) => {
+      const url = `/StaffReady/v10/api/subject/save`;
+      return api.post(url, payload, callback, errorCallback, params);
+    };
+
 }
