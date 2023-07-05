@@ -90,7 +90,7 @@ const CustomTree = (props) => {
         );
       }
 
-      TreeItemLabelWithIcon = (
+      label = (
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Box>
             <TreeIcon type={node.type} />
@@ -102,7 +102,7 @@ const CustomTree = (props) => {
         label = (
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Box sx={node.type === props.selectionType ? { pt: 0.75 } : {}}>
-              {label}
+              {TreeItemLabelWithIcon}
 
             </Box>
             {node.type === props.selectionType ?
@@ -125,8 +125,6 @@ const CustomTree = (props) => {
 
       if (typeof props.nodeFormatter === 'function') {
         label = props.nodeFormatter(node);
-      } else {
-        label = TreeItemLabelWithIcon
       }
 
       let TreeItem = <StyledTreeItem />
