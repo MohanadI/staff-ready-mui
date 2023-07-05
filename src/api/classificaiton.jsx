@@ -9,5 +9,14 @@ export const useClassificationAPI = (api, enabledAPIs) => {
         return api.get(url, callback, callbackError)
     }
 
+    api.classification.get_parent = (pk, callback, callbackError) => {
+        const url = `/StaffReady/v10/api/classification/${pk}`
+        return api.get(url, callback, callbackError)
+    }
+
+    api.classification.department = (callback, errorCallback) => {
+        const url = `/StaffReady/v10/api/department/tree`
+        return api.get(url, callback, errorCallback);
+    }
 
 }

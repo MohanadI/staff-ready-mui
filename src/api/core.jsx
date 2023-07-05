@@ -40,7 +40,20 @@ export const useAPI = () => {
                     return error;
                 })
         },
-
+        post: function (url, payload, callback, errorCallback, params) {
+            console.log(params);
+            return axios.post(url, payload, params)
+                .then((response) => {
+                    callback && callback(response.data)
+                    return response
+                })
+                .catch((error) => {
+                    console.error(error);
+                    //addToast("Error loading  data", {appearance: 'error', autoDismiss: false})
+                    errorCallback && errorCallback(error);
+                    return error;
+                })
+        },
         colorbarStatus: function (module, colorbarId, pk, callback, errorCallback) {
             const url = `/StaffReady/v10/api/${module}/colorbar/${colorbarId}/${pk}`;
             return api.get(url, callback, errorCallback);

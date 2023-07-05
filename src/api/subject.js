@@ -13,4 +13,14 @@ export const useSubjectApi = (api, enableAPIs) => {
         return api.get(url, callback, errorCallback);
     }
 
+    api.subject.create_document = (payload, callback, errorCallback) => {
+      const url = `/StaffReady/v10/api/document/create`;
+      return api.post(url, payload, callback, errorCallback);
+    };
+
+    api.subject.create_subject = (payload, callback, errorCallback, params) => {
+      const url = `/StaffReady/v10/api/subject/save`;
+      return api.post(url, payload, callback, errorCallback, params);
+    };
+
 }
