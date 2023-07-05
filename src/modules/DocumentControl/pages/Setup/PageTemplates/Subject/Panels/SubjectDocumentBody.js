@@ -5,7 +5,7 @@ import Context from '../../../Context';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import BulkEditModal from '../SubComp/BulkEditModal';
+import BulkEditModal from '../../../../../../../@core/components/BulkEdit/BulkEditModal';
 import { Link } from 'react-router-dom'
 import { Typography } from '@mui/material';
 

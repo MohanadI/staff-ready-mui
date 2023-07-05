@@ -44,4 +44,14 @@ export const useCommonAPI = (api, enabledAPIs) => {
         return api.get(url, callback, callbackError)
     }
 
+    api.common.bulkEdit = (payload, callback, callbackError) => {
+        const url = `/StaffReady/v10/api/document/bulkEdit`;
+        return api.post(url, payload, callback, callbackError);
+    }
+
+
+    api.common.employeeSummery = (id, callback, callbackError) => {
+        const url = `StaffReady/v10/api/account/${id}/summary`;
+        return api.get(url, callback, callbackError);
+    }
 }

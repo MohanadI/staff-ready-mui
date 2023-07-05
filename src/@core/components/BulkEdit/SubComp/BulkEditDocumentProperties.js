@@ -1,31 +1,46 @@
-import Form from "../../../../../../../@core/components/Form/Form";
-import TreeSelection from "../../../../../../../@core/components/TreeSelection/TreeSelection";
+import Form from "../../Form/Form";
+import TreeSelection from "../../TreeSelection/TreeSelection";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField'
-import withAPI from "../../../../../../../api/core";
+import withAPI from "../../../../api/core";
 import Button from '@mui/material/Button'
-import AutoCompleteComp from "../../../../../../../@core/components/AutoCompleteComp/AutoCompleteComp";
-import { useBulkEditContext } from "../../../Context";
+import AutoCompleteComp from "../../AutoCompleteComp/AutoCompleteComp";
+import { useBulkEditContext } from "../../../../modules/DocumentControl/pages/Setup/Context";
 import { useEffect, useRef } from "react";
+import RadioButtonGroup from "../../RadioButtonGroup/RadioButtonGroup";
+import Typography from '@mui/material/Typography'
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import { grey } from "@mui/material/colors";
+import WarningMsgComp from "../../WarningMsgComp/WarningMsgComp";
+
 
 const BulkEditDocumentProperties = (props) => {
 
     const { api } = props;
 
-    const context = useBulkEditContext();
-
+    const sharedData = useBulkEditContext();
+    const { selectedRows, documentProperties } = sharedData.values;
+    const { setDocumentProperties } = sharedData.methods;
     const formRef = useRef('');
 
+
     useEffect(() => {
-        context.docPropFormRef = formRef;
+        sharedData.docPropFormRef = formRef;
     }, [])
 
     return (
         <Box>
+            <Typography sx={{ mb: 2 }} variant="h5" color="initial">
+                Document Properties
+            </Typography>
+            <Typography sx={{ fontStyle: "italic", mb: 2, color: grey[600] }} variant="subtitle1" color="initial">
+                {`${selectedRows.length} row(s) selected `}
+            </Typography>
             <Form
                 onSubmit={(formData) => {
-                    console.log(formData)
+                    setDocumentProperties(formData)
                 }}
+                initData={documentProperties}
                 ref={formRef}
                 colPerRow={3}
                 fields={[
@@ -40,7 +55,7 @@ const BulkEditDocumentProperties = (props) => {
                             />
                         ),
                         name: 'classification',
-                        validation: { required: true }
+                        // validation: { required: true }
                     },
                     {
                         comp: (
@@ -59,7 +74,7 @@ const BulkEditDocumentProperties = (props) => {
                             />
                         ),
                         name: 'subject',
-                        validation: { required: true }
+                        // validation: { required: true }
                     },
                     {
                         comp: (
@@ -67,17 +82,18 @@ const BulkEditDocumentProperties = (props) => {
                                 label={'Document Owner'}
                                 validation={{ required: true }}
                                 mode="menu"
-                                displayPortion="text"
+                                displayPortion="name"
+                                selectionType="employee"
                             />
                         ),
                         name: 'documentOwner',
-                        validation: { required: true }
+                        // validation: { required: true }
 
 
                     },
                     {
                         name: 'revisionSchedule',
-                        validation: { required: true },
+                        // validation: { required: true },
                         comp: (
                             <AutoCompleteComp
                                 size={'small'}
@@ -99,7 +115,7 @@ const BulkEditDocumentProperties = (props) => {
                     },
                     {
                         name: 'access',
-                        validation: { required: true },
+                        // validation: { required: true },
                         comp: (
                             <AutoCompleteComp
                                 size={'small'}
@@ -117,8 +133,50 @@ const BulkEditDocumentProperties = (props) => {
                                 }}
                             />
                         )
+                    },
+                    {
+                        name: 'locationMode',
+                        comp: (
+                            <RadioButtonGroup
+                                buttonList={[
+                                    {
+                                        label: 'Add locations to selected documents',
+                                        value: 'add'
+                                    },
+                                    {
+                                        label: 'Replace locations on selected documents Locations',
+                                        value: 'replace'
+                                    }
+                                ]}
+                                size={'small'}
+                            />
+                        ),
+                        validation: { required: true },
+                        hideInLayout: true
                     }
                 ]}
+                customLayout={(fields, defaultLayout) => {
+                    return (<Box>
+                        {defaultLayout}
+                        <Box sx={{ mt: 2 }}>
+                            <Box>
+                                Locations
+                            </Box>
+                            <Box>
+                                <WarningMsgComp
+                                    message={"IMPORTANT: Documents that use Location Review Teams or Site Approvers will be affected by editing locations."}
+                                />
+                            </Box>
+                            <Box>
+                                {fields[5]}
+                            </Box>
+
+
+                        </Box>
+
+                    </Box>)
+                }}
+
             />
         </Box>
     )

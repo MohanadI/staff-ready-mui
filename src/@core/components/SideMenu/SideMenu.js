@@ -63,11 +63,14 @@ const SideMenu = (props) => {
                         {menuListObj.map((item, idx) => {
                             const bordersStyle = getItemBorderStyle(idx)
                             return (
-                                <ListItem key={idx} sx={{
-                                    backgroundColor: item.active ? (theme) => theme.palette.primary.main : 'gray',
-                                    color: 'white',
-                                    ...bordersStyle
-                                }}>
+                                <ListItem key={idx}
+                                    sx={{
+                                        backgroundColor: item.active ? (theme) => theme.palette.primary.main : 'gray',
+                                        color: 'white',
+                                        ...bordersStyle
+                                    }}
+                                    size={"small"}
+                                >
                                     <ListItemButton onClick={() => onMenuItemClicked(idx)}>
                                         <ListItemText primary={item.text} />
                                     </ListItemButton>
