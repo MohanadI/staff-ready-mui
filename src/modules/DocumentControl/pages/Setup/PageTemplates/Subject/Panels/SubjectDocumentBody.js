@@ -106,8 +106,6 @@ function SubjectDocumentBody(props) {
         onClose={() => setIsOpenModal(false)}
         documents={documents}
       />
-
-
     </>
   );
 }
