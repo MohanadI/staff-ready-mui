@@ -1,4 +1,4 @@
-import { red, grey } from "@mui/material/colors";
+import { red, grey, yellow } from "@mui/material/colors";
 import { createTheme } from "@mui/material/styles";
 
 // A custom theme for this app
@@ -14,6 +14,7 @@ const theme = createTheme({
     error: {
       main: red.A400,
     },
+    danger: yellow.A700
   },
   form: {
     errorMsgFontSize: '12px',

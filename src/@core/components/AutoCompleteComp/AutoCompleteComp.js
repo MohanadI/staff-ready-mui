@@ -5,7 +5,7 @@ import { Controller } from 'react-hook-form';
 
 
 const AutoCompleteComp = (props) => {
-    const { label, api, options: propOpt, renderOption, mode, ...rest } = props
+    const { label, api, options: propOpt, renderOption, mode, isFormComp, formHookProps, ...rest } = props
     const [loadingOpt, setLoadingOpt] = useState(false);
 
 
@@ -73,9 +73,9 @@ const AutoCompleteComp = (props) => {
 
     return (
         <>
-            {props.formComp ?
+            {isFormComp ?
                 <Controller
-                    control={props.control}
+                    control={formHookProps.control}
                     name={rest?.name}
                     render={({ field }) => {
                         const { onChange: formOnChange, ...restFormProps } = field
@@ -88,13 +88,14 @@ const AutoCompleteComp = (props) => {
                         }
 
                         return (React.cloneElement(AutoCompleteComp, {
-                            ...restFormProps,
                             ...AutoCompleteComp.props,
+                            ...restFormProps,
                             onChange: (e, data) => _onChange(e, data)
                         }))
 
                     }}
                     rules={rest.validation}
+                    defaultValue={null}
                 />
                 :
                 AutoCompleteComp

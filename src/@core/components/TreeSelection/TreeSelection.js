@@ -11,6 +11,7 @@ import withAPI from '../../../api/core';
 import { CustomStyledTreeItem } from './Style';
 import CustomTree from '../CustomTree/CustomTree';
 import { extractValueFromObjPath } from '../../utils/GeneralUtils';
+import Button from '@mui/material/Button'
 
 const TreeSelection = React.forwardRef((props, ref) => {
 
@@ -19,17 +20,18 @@ const TreeSelection = React.forwardRef((props, ref) => {
         expandFirstNode,
         selectionType,
         customTopLevelData,
-        setValue,
         name,
-        trigger,
         mode,
         validation,
-        getValues,
-        displayPortion = 'text'
+        displayPortion = 'text',
+        isFormComp,
+        formHookProps,
+        customLayout
     } = props;
 
     const [isOpen, setIsOpen] = useState(false);
     const [selectedData, setSelectedData] = useState({ text: '[no set]', value: '' });
+    // const [selectLoading, setSelectLoading] = useState(false)
 
 
     const openModal = () => {
@@ -37,33 +39,48 @@ const TreeSelection = React.forwardRef((props, ref) => {
     }
 
 
-    const onSelectedData = (selectedData) => {
+    const onSelectedData = async (selectedData, mode) => {
+        let data = selectedData
+        if (mode === 'requestSummery') {
+            // setSelectLoading(true)
+            const resp = await api.common.employeeSummery(selectedData.value)
+            // setSelectLoading(false)
+            data = resp.data
+
+        }
         setIsOpen(false);
-        setSelectedData(selectedData);
-        setValue(name, selectedData);
-        trigger(name);
+        setSelectedData(data);
+        formHookProps.setValue(name, data);
+        formHookProps.trigger(name);
 
     }
 
-    const value = getValues(name);
+    const value = formHookProps.getValues(name);
 
     const displayLabel = extractValueFromObjPath(displayPortion, value);
 
     return (<Box>
-        <FormControl required={true}>
-            <FormLabel>
-                {label}
-            </FormLabel>
-            <Link
-                underline='hover'
-                onClick={openModal}
-                sx={{ cursor: 'pointer' }}
-            >
-                {displayLabel}
-            </Link>
-        </FormControl>
 
-        <input type='hidden'{...props.register(props.name, { ...validation })} />
+        {typeof customLayout === 'function' ?
+
+            customLayout({ label, displayLabel, openModal }) :
+
+            <FormControl required={true}>
+                <FormLabel>
+                    {label}
+                </FormLabel>
+                <Link
+                    underline='hover'
+                    onClick={openModal}
+                    sx={{ cursor: 'pointer' }}
+                >
+                    {displayLabel || "[not set]"}
+                </Link>
+            </FormControl>
+        }
+
+
+        <input type='hidden'{...formHookProps.register(name, { ...validation })} />
 
         {mode !== 'menu' ?
             <TreeSelectionModal
@@ -83,38 +100,71 @@ const TreeSelection = React.forwardRef((props, ref) => {
                 menuList={[
                     {
                         text: 'Name',
-                        comp: <EmployeeNameForm onSelection={onSelectedData} />
+                        comp: <EmployeeNameForm
+                            onSelection={(data) => onSelectedData({ value: data?.value?.personPk }, 'requestSummery')}
+                        />
                     },
                     {
                         text: 'Department',
                         comp: (
                             <CustomTree
                                 api={props.api?.common?.departmentWorkers}
-                                selectionType="employee"
+                                selectionType={selectionType}
                                 expandFirstNode={true}
-                                nodeFormatter={(node) => {
-                                    return (
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                            <Box sx={node.type === selectionType ? { pt: 0.75 } : {}}>
-                                                {node.text}
-
-                                            </Box>
-                                            {node.type === selectionType ?
-                                                <Button size={'small'} variant="outlined" onClick={(e) => onSelectedData(e, node)}>
-                                                    Select
-                                                </Button>
-                                                : null}
-
-                                        </Box>
-                                    )
-                                }}
+                                mode={'selection'}
+                                onSelection={(data) => onSelectedData(data, 'requestSummery')}
                                 styledTreeItem={() => <CustomStyledTreeItem />}
+                                key={'Department'}
+                            // selectLoading={selectLoading}
                             />
                         )
                     },
-                    { text: 'Job Title' },
-                    { text: 'Schedule' },
-                    { text: 'Skillset' }
+                    {
+                        text: 'Job Title',
+                        comp: (
+                            <CustomTree
+                                api={props.api?.common?.jobTitlesWorkers}
+                                selectionType={selectionType}
+                                expandFirstNode={true}
+                                mode={'selection'}
+                                onSelection={(data) => onSelectedData(data, 'requestSummery')}
+                                styledTreeItem={() => <CustomStyledTreeItem />}
+                                key={'Job Title'}
+                            // selectLoading={selectLoading}
+                            />
+                        )
+
+                    },
+                    {
+                        text: 'Schedule',
+                        comp: (
+                            <CustomTree
+                                api={props.api?.common?.scheduleWorkers}
+                                selectionType={selectionType}
+                                expandFirstNode={true}
+                                mode={'selection'}
+                                onSelection={(data) => onSelectedData(data, 'requestSummery')}
+                                styledTreeItem={() => <CustomStyledTreeItem />}
+                                key={'Schedule'}
+                            // selectLoading={selectLoading}
+                            />
+                        )
+                    },
+                    {
+                        text: 'Skillset',
+                        comp: (
+                            <CustomTree
+                                api={props.api?.common?.skillSetWorkers}
+                                selectionType={selectionType}
+                                expandFirstNode={true}
+                                mode={'selection'}
+                                onSelection={(data) => onSelectedData(data, 'requestSummery')}
+                                styledTreeItem={() => <CustomStyledTreeItem />}
+                                key={'Skillset'}
+                            // selectLoading={selectLoading}
+                            />
+                        )
+                    }
                 ]}
             />
 

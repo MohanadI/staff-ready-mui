@@ -7,13 +7,13 @@ import CustomHeader from './SubComponents/CustomHeader';
 
 
 
-export const CustomGrid = forwardRef(({ rows, columns, onSelectRow, ...others }, ref) => {
+export const CustomGrid = forwardRef(({ rows, columns, onSelectRow, pageSize = 10, ...others }, ref) => {
 
     const [_rows, setRows] = useState(rows);
     const [filteredRows, setFilteredRows] = useState([])
     const [_columns, setColumns] = useState(columns);
 
-    const pageSizeOptions = [10, 12, 15, 20, 30]
+    const pageSizeOptions = [8, 10, 12, 15, 20, 30]
     const apiRef = useGridApiRef("");
 
     useEffect(() => {
@@ -80,15 +80,15 @@ export const CustomGrid = forwardRef(({ rows, columns, onSelectRow, ...others },
 
 
     return (
-        <Box>
+        <Box height={{ height: filteredRows?.length == 0 ? '100px' : 'auto' }}>
             <DataGrid
                 columns={_columns}
-                rows={filteredRows}
+                rows={filteredRows || []}
                 slots={{
                     columnHeaders: CustomHeader
                 }}
                 initialState={{
-                    pagination: { paginationModel: { pageSize: 12 } }
+                    pagination: { paginationModel: { pageSize } }
                 }}
                 apiRef={apiRef}
                 pageSizeOptions={pageSizeOptions}

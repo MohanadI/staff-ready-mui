@@ -37,7 +37,13 @@ const CustomHeader = forwardRef((props, ref) => {
     }
 
     function hasFilterField(col) {
-        return col.hasFilter || col.type !== "checkboxSelection";
+        if (col?.hasOwnProperty('hasFilter')) {
+            return col.hasFilter
+        } else if (col.type === "checkboxSelection") {
+            return false;
+        }
+
+        return true
     }
 
     const onHeaderChecked = (e, col) => {

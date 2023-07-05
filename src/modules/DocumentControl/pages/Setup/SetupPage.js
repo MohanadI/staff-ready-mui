@@ -230,6 +230,7 @@ function SetupPage({ api }) {
                 handleContextDataChange(match, "selectedNode");
               }}
               context={Context}
+              height={height - 250}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={9} lg={9}>

@@ -36,15 +36,20 @@ const CustomTree = (props) => {
   const [treeData, setTreeData] = useState([]);
   const [searchVal, setSearchVal] = useState("");
   const [expandedIds, setExpandedIds] = useState(props.defaultExpandIds || []);
-  const { height } = useWindowSize();
+  const [apiLoader, setApiLoader] = useState(false);
 
   const { onNodeSelect = (() => { }) } = props
 
   useEffect(() => {
     if (props.api) {
       (async () => {
+        setApiLoader(true)
         const resp = await props.api();
         setTreeData(resp.data);
+        setApiLoader(false)
+        if (props.expandFirstNode) {
+          setExpandedIds([resp.data[0].value])
+        }
       })()
     } else {
       setTreeData(props.data);
@@ -93,6 +98,30 @@ const CustomTree = (props) => {
           {label}
         </Box>
       );
+      if (props.mode === 'selection') {
+        label = (
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Box sx={node.type === props.selectionType ? { pt: 0.75 } : {}}>
+              {label}
+
+            </Box>
+            {node.type === props.selectionType ?
+              <Button size={'small'} disabled={props.selectLoading} variant="outlined" onClick={(e) => {
+                if (typeof props.onSelection === 'function') {
+                  props.onSelection(node, e);
+                }
+              }}>
+                {props.selectLoading ?
+                  <CircularProgress />
+
+                  : null}
+                Select
+              </Button>
+              : null}
+
+          </Box>
+        )
+      }
 
       if (typeof props.nodeFormatter === 'function') {
         label = props.nodeFormatter(node);
@@ -165,55 +194,63 @@ const CustomTree = (props) => {
 
 
   return (
-    <Box sx={tree_wrapper}>
-      {!props.hideFilter ?
-
-        <Box sx={search_container_style}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} md={9}>
-              <TextField
-                size="small"
-                onChange={onSearch}
-                value={searchVal}
-                sx={{ width: "100%" }}
-                placeholder="search"
-              />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <Button
-                sx={{ minWidth: "100%", height: "100%" }}
-                size="small"
-                variant="outlined"
-                onClick={resetSearch}
-              >
-                Reset
-              </Button>
-            </Grid>
-          </Grid>
+    <>
+      {apiLoader ?
+        <Box sx={{ height: "70%", display: 'flex', justifyContent: "center", alignItems: "center" }}>
+          <CircularProgress />
         </Box>
-        : null
+        :
+        <Box sx={tree_wrapper}>
+          {!props.hideFilter ?
 
+            <Box sx={search_container_style}>
+              <Grid container spacing={1}>
+                <Grid item xs={12} md={9}>
+                  <TextField
+                    size="small"
+                    onChange={onSearch}
+                    value={searchVal}
+                    sx={{ width: "100%" }}
+                    placeholder="search"
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <Button
+                    sx={{ minWidth: "100%", height: "100%" }}
+                    size="small"
+                    variant="outlined"
+                    onClick={resetSearch}
+                  >
+                    Reset
+                  </Button>
+                </Grid>
+              </Grid>
+            </Box>
+            : null
+
+          }
+          <PerfectScrollbar style={{ height: props.height }}>
+            {props.isLoading ? (
+              <div style={{ textAlign: "center" }}>
+                <CircularProgress size={25} />
+              </div>
+            ) : (
+              <TreeView
+                aria-label="file system navigator"
+                defaultCollapseIcon={<MinusSquare />}
+                defaultExpandIcon={<PlusSquare />}
+                expanded={expandedIds}
+                onNodeSelect={(e, node) => onNodeSelect(e, node, treeData)}
+                onNodeToggle={(e, nodeIds) => setExpandedIds(nodeIds)}
+                classes={{ root: "my-custom-tree-view" }} // add classes prop here
+              >
+                {renderData(treeData, 1)}
+              </TreeView>
+            )}
+          </PerfectScrollbar>
+        </Box>
       }
-      <PerfectScrollbar style={{ height: height - 250 }}>
-        {props.isLoading ? (
-          <div style={{ textAlign: "center" }}>
-            <CircularProgress size={25} />
-          </div>
-        ) : (
-          <TreeView
-            aria-label="file system navigator"
-            defaultCollapseIcon={<MinusSquare />}
-            defaultExpandIcon={<PlusSquare />}
-            expanded={expandedIds}
-            onNodeSelect={(e, node) => onNodeSelect(e, node, treeData)}
-            onNodeToggle={(e, nodeIds) => setExpandedIds(nodeIds)}
-            classes={{ root: "my-custom-tree-view" }} // add classes prop here
-          >
-            {renderData(treeData, 1)}
-          </TreeView>
-        )}
-      </PerfectScrollbar>
-    </Box>
+    </>
   );
 };
 

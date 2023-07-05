@@ -2,8 +2,8 @@ import React, { useEffect, useContext, useState } from "react";
 
 import Context from "../../Context";
 import AccordionComponent from "../../../../../../@core/components/Accordion";
-import SubjectDocumentBody from "./Body/SubjectDocumentBody";
-import SubjectBody from "./Body/SubjectBody";
+import SubjectDocumentBody from "./Panels/SubjectDocumentBody";
+import SubjectBody from "./Panels/SubjectBody";
 import withAPI from "../../../../../../api/core";
 
 

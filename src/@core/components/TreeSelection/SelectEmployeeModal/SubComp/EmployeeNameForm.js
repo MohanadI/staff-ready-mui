@@ -75,7 +75,7 @@ const EmployeeNameForm = (props) => {
                         <Grid container spacing={2}>
                             {Object.keys(displayData).map((key, idx) => {
                                 return (
-                                    <Grid item md={6}>
+                                    <Grid key={idx} item md={6}>
                                         <FormControl>
                                             <FormLabel>{key}</FormLabel>
                                             <Box>{displayData[key] || 'not set'}</Box>
@@ -87,7 +87,7 @@ const EmployeeNameForm = (props) => {
                         </Grid>
                     </Box>
                     <Box>
-                        <Button variant="outlined" onClick={() => onSelection({ text: selectedData.name, value: selectedData.personPk })}>
+                        <Button variant="outlined" onClick={() => onSelection({ text: selectedData.name, value: selectedData })}>
                             Add to Owner
                         </Button>
                     </Box>

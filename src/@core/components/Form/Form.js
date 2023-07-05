@@ -39,7 +39,8 @@ const Form = React.forwardRef((props, ref) => {
 
     useImperativeHandle(ref, () => (
         {
-            submitForm: handleSubmit
+            submitForm: handleSubmit,
+            internalSubmit: _onSubmit
         }
     ))
 
@@ -86,58 +87,62 @@ const Form = React.forwardRef((props, ref) => {
 
     let calledFields = [];
     if (props.hasOwnProperty('customLayout') && props.customLayout) {
-        calledFields = fieldsComp.map(field => field(formState))
+        calledFields = fieldsComp.map(field => field.comp(formState))
     }
 
+    const defaultLayout = (<Grid container spacing={2}>
+        {fieldsComp?.filter(field => !field.hideInLayout)?.map((field, i) => {
+            return (
+                <Grid key={i} item md={colWidth}>
+
+                    {field.comp(formState)}
+                </Grid>
+            )
+        })}
+    </Grid>)
+
     return (
-        <form onSubmit={handleSubmit(_onSubmit)}>
+        <Box sx={props.sx}>
+            <form onSubmit={handleSubmit(_onSubmit)}>
 
-            <Grid container spacing={2}>
+                <Grid container spacing={2}>
 
-                <Grid item md={12}>
-                    {props.hasOwnProperty('customLayout') && typeof props.customLayout === 'function' ?
-                        props.customLayout(calledFields)
+                    <Grid item md={12}>
+                        {props.hasOwnProperty('customLayout') && typeof props.customLayout === 'function' ?
+                            props.customLayout(calledFields, defaultLayout)
+                            :
+                            defaultLayout
+                        }
+                    </Grid>
 
-                        :
-                        <Grid container spacing={2}>
-                            {fieldsComp?.map((field, i) => {
-                                return (
-                                    <Grid key={i} item md={colWidth}>
+                    {props.hasOwnProperty('customAction') && typeof props.customAction === 'function' ?
+                        props.customView(calledFields) :
+                        <Grid item md={12}>
+                            <Stack direction={'row'} spacing={1}>
+                                {actions?.map((action, idx) => {
+                                    const actionProps = {};
+                                    if (action.type === 'submit') {
+                                        actionProps.type = 'submit'
+                                    }
 
-                                        {field(formState)}
-                                    </Grid>
-                                )
-                            })}
-                        </Grid>
-                    }
+                                    if (action.type === 'reset') {
+                                        actionProps.onClick = () => reset(defaultVal);
+                                        actionProps.type = 'button';
+                                    }
+
+                                    return (
+                                        <Item key={idx}>
+                                            {React.cloneElement(action.comp, actionProps)}
+                                        </Item>
+                                    )
+                                })}
+                            </Stack>
+                        </Grid>}
                 </Grid>
 
-                {props.hasOwnProperty('customAction') && typeof props.customAction === 'function' ?
-                    props.customView(calledFields) :
-                    <Grid item md={12}>
-                        <Stack direction={'row'} spacing={1}>
-                            {actions?.map((action, idx) => {
-                                const actionProps = {};
-                                if (action.type === 'submit') {
-                                    actionProps.type = 'submit'
-                                }
+            </form>
+        </Box>
 
-                                if (action.type === 'reset') {
-                                    actionProps.onClick = () => reset(defaultVal);
-                                    actionProps.type = 'button';
-                                }
-
-                                return (
-                                    <Item key={idx}>
-                                        {React.cloneElement(action.comp, actionProps)}
-                                    </Item>
-                                )
-                            })}
-                        </Stack>
-                    </Grid>}
-            </Grid>
-
-        </form>
     )
 
 })
