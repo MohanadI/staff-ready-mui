@@ -71,7 +71,7 @@ function ModalWithTabs({ data, open, onClose }) {
         onClose();
       }}
       fullWidth={true}
-      maxWidth={"sm"}
+      maxWidth={"md"}
     >
       <StyledDialogTitle>
         {data.title}
