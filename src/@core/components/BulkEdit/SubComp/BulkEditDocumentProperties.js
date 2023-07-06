@@ -20,12 +20,12 @@ const BulkEditDocumentProperties = (props) => {
 
     const sharedData = useBulkEditContext();
     const { selectedRows, documentProperties } = sharedData.values;
-    const { setDocumentProperties } = sharedData.methods;
-    const formRef = useRef('');
+    const { setDocumentProperties, setFormRef } = sharedData.methods;
+    const _formRef = useRef('');
 
 
     useEffect(() => {
-        sharedData.docPropFormRef = formRef;
+        setFormRef(_formRef.current);
     }, [])
 
     return (
@@ -41,7 +41,7 @@ const BulkEditDocumentProperties = (props) => {
                     setDocumentProperties(formData)
                 }}
                 initData={documentProperties}
-                ref={formRef}
+                ref={_formRef}
                 colPerRow={3}
                 fields={[
                     {
