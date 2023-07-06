@@ -7,7 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText'
 import Button from '@mui/material/Button';
 import StepWizard from "../StepWizard/StepWizard";
 import { BulkEditContext } from "../../../modules/DocumentControl/pages/Setup/Context";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { bulkEditConfigs } from "./BulkEditConfigs";
 import isEmpty from "lodash/isEmpty";
 import BulkEditMappers from "./BulkEditMapper";
@@ -19,9 +19,10 @@ const BulkEditModal = (props) => {
     const [activeStep, setActiveStep] = useState(0);
     const [selectedRows, setSelectedRows] = useState([]);
     const [documentProperties, setDocumentProperties] = useState({})
-    const [reviewers, setReviewers] = useState();
-    const [finalReviewers, setFinalReviewers] = useState();
-    const [approvers, setApprovers] = useState();
+    const [reviewers, setReviewers] = useState({});
+    const [finalReviewers, setFinalReviewers] = useState({});
+    const [approvers, setApprovers] = useState({});
+    const [formRef, setFormRef] = useState();
 
     const contextVal = {
         values: {
@@ -30,7 +31,8 @@ const BulkEditModal = (props) => {
             documentProperties,
             reviewers,
             finalReviewers,
-            approvers
+            approvers,
+            formRef
 
         },
         methods: {
@@ -38,15 +40,15 @@ const BulkEditModal = (props) => {
             setDocumentProperties,
             setApprovers,
             setFinalReviewers,
-            setReviewers
+            setReviewers,
+            setFormRef
         }
     }
 
     async function onNextClicked(actions, stepNo) {
         if ([1, 2, 3, 4].includes(stepNo)) {
-            const form = contextVal.docPropFormRef?.current;
-            form.submitForm?.((data) => {
-                form.internalSubmit(data)
+            formRef.submitForm?.((data) => {
+                formRef.internalSubmit(data)
                 actions.nextStep();
             })()
 

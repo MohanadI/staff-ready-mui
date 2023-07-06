@@ -51,7 +51,6 @@ const Form = React.forwardRef((props, ref) => {
 
     if (typeof onChange === 'function') {
         if (onChangeDep && Array.isArray(onChangeDep)) {
-
             formData = watch(onChangeDep)
         } else {
             formData = watch();

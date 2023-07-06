@@ -31,7 +31,7 @@ export function getDefaultValues(defaultValues, fields) {
         return defaultValues
     }
     return fields?.reduce((acc, curr) => {
-        acc[curr.name || curr] = '';
+        acc[curr.name || curr] = null;
         return acc;
 
     }, {})

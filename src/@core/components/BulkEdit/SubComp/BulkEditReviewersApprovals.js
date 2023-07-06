@@ -14,16 +14,28 @@ import withAPI from "../../../../api/core";
 const BulkEditReviewersApprovals = (props) => {
     const sharedData = useBulkEditContext();
     const { selectedRows, reviewers, finalReviewers, approvers } = sharedData.values
-    const { setReviewers, setFinalReviewers, setApprovers } = sharedData.methods
+    const { setReviewers, setFinalReviewers, setApprovers, setFormRef } = sharedData.methods
 
     const [persons, setPersons] = useState([]);
-    const formRef = useRef('');
+    const _formRef = useRef('');
 
     const { warningMsg, radioBtn, fieldNames, api } = props;
 
+    const setState = {
+        "reviewers": setReviewers,
+        "finalReviewers": setFinalReviewers,
+        "approvers": setApprovers
+    }
+
+    const states = {
+        reviewers,
+        finalReviewers,
+        approvers
+    }
+
 
     useEffect(() => {
-        sharedData.docPropFormRef = formRef;
+        setFormRef(_formRef.current);
     }, [])
 
     useEffect(() => {
@@ -40,50 +52,34 @@ const BulkEditReviewersApprovals = (props) => {
         }
     }
 
-    function addPerson(data) {
-        let mappedPerson = "";
-
-        if (data[fieldNames[1].value]) {
-            mappedPerson = personMapper(data[fieldNames[1].value]);
-            setPersons((state) => state.concat([mappedPerson]))
-
+    function addPerson(person, type) {
+        if (person) {
+            const mappedPerson = personMapper(person);
+            setState[type]((state) => {
+                return {
+                    ...state,
+                    persons: Array.isArray(state.persons) ? state.persons.concat(mappedPerson) : [mappedPerson]
+                }
+            });
         }
-
-
     }
 
 
     async function onFormChanged(data) {
-        addPerson(data)
+        const person = data[fieldNames?.[1].value];
+        const type = props.type;
+        addPerson(person, type)
+        const mode = data[fieldNames?.[0].value];
+        setState[type](state => {
+            return { ...state, mode }
+
+        })
     }
 
     function getInitData() {
         const type = props.type;
-        if (type === 'reviewers')
-            return reviewers;
+        return states[type]
 
-        if (type === 'finalReviewers')
-            return finalReviewers;
-
-        if (type === 'approvers')
-            return approvers;
-    }
-
-    function onSubmit(formData) {
-        const data = {
-            mode: formData.mode,
-            persons: persons
-        }
-        const type = props.type;
-
-        if (type === 'reviewers')
-            setReviewers(data)
-
-        if (type === 'finalReviewers')
-            setFinalReviewers(data)
-
-        if (type === 'approvers')
-            setApprovers(data);
     }
 
     return (
@@ -102,10 +98,9 @@ const BulkEditReviewersApprovals = (props) => {
                 colPerRow={1}
                 sx={{ mt: 2 }}
                 initData={{ mode: getInitData()?.mode }}
-                ref={formRef}
+                ref={_formRef}
                 onChange={onFormChanged}
-                onChangeDep={[fieldNames?.[1]?.value]}
-                onSubmit={onSubmit}
+                onChangeDep={[fieldNames?.[1]?.value, fieldNames?.[0].value]}
                 fields={[
                     {
                         name: fieldNames?.[0]?.value,
