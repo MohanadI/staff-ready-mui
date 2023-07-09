@@ -1,5 +1,4 @@
-
-const { makeDevelopmentConfig } = require('./webpack.config.modular.js');
+const { makeDevelopmentConfig } = require("./webpack.config.modular.js");
 const devexports = makeDevelopmentConfig();
 
 /* ===========================================
@@ -12,19 +11,22 @@ const devexports = makeDevelopmentConfig();
  * =========================================== */
 
 module.exports = devexports;
-module.exports.devtool = 'inline-source-map';
+module.exports.devtool = "inline-source-map";
 module.exports.devServer = {
-    historyApiFallback: true,
-    port: 3000,								// Port 3005 because Tomcat uses 8080
-    hot: true,								// Enable hot-reload when changes are made (does not account for build errors)
-    proxy: [{									// Enable proxy for any REST calls to Spring Controllers
-        context: ['/StaffReady/v10/api/**'],
-        target: 'https://cobalt301.openstack.local',
-        secure: false,
-    }],
-    open: false,
-    client: {
-        logging: 'verbose',
+  historyApiFallback: true,
+  port: 3000, // Port 9000 because Tomcat uses 8080
+  hot: true, // Enable hot-reload when changes are made (does not account for build errors)
+  proxy: [
+    {
+      // Enable proxy for any REST calls to Spring Controllers
+      context: ["/StaffReady/v10/api/**"],
+      target: "https://cobalt301.openstack.local",
+      secure: false,
     },
-    static: './WEB-INF/views/build'
+  ],
+  open: false,
+  client: {
+    logging: "verbose",
+  },
+  static: "./WEB-INF/views/build",
 };
