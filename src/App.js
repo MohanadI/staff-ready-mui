@@ -39,7 +39,10 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<h1>Home</h1>} />
-            <Route path="documentcontrol/*" element={<DocumentControl />} />
+            <Route
+              path="StaffReady/v10/documentcontrol/*"
+              element={<DocumentControl />}
+            />
           </Routes>
         </BrowserRouter>
       </SettingsProvider>
