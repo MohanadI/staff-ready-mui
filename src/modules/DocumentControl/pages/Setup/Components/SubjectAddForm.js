@@ -34,9 +34,10 @@ function SubjectAddForm({ api }) {
     return () => clearTimeout(timer);
   }, []);
 
-  const save = (data) => {
-    data.parentPk = data.parentPk.value;
-    api.subject.create_subject(
+  const save = async (data) => {
+    data.parentPk = data.parentPk?.value;
+    setIsLoading(true);
+    await api.subject.create_subject(
       data,
       () => {
         console.log("success");
@@ -45,17 +46,16 @@ function SubjectAddForm({ api }) {
         console.log("error");
       },
       {
-        params: {
-          auditContextJson: JSON.stringify({
-            auditContextClass:
-              "com.maplewoodsoftware.colorbar.documentcontrol.subject.SubjectColorBar",
-            navigationLabelId: "SubjectPk"
-          }),
-        },
+        auditContextJson: JSON.stringify({
+          auditContextClass:
+            "com.maplewoodsoftware.colorbar.documentcontrol.subject.SubjectColorBar",
+          navigationLabelId: "SubjectPk",
+          navigationPk: subjectPk,
+        }),
       }
     );
+    setIsLoading(false);
   };
-
 
   const auditContext = () => {
     return {
