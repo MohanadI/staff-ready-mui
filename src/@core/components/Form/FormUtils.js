@@ -69,31 +69,29 @@ export function processingFormField(fields, theme, formHookProps, initData) {
                 ...element,
                 comp: ((formState) => {
                     const { errors } = formState
-                    const isError = !!errors[element.name]?.message;
                     const name = element?.name
+                    const isError = !!errors[element.name]?.message;
 
                     return (
                         <>
-                            <Box sx={isError ? style.formErrorBorder : {}}>
-                                <Controller
-                                    control={control}
-                                    name={element?.name}
-                                    render={({ field }) => {
-                                        const { onChange: formOnChange, ...rest } = field
-                                        const originalOnChange = element?.comp?.props?.onChange || (() => { })
+                            <Controller
+                                control={control}
+                                name={element?.name}
+                                render={({ field }) => {
+                                    const { onChange: formOnChange, ...restFormFieldsProps } = field
+                                    const originalOnChange = element?.comp?.props?.onChange || (() => { })
 
-                                        function _onChange(e) {
-                                            formOnChange(e);
-                                            originalOnChange(e)
-                                        }
-                                        return React.cloneElement(element?.comp,
-                                            { ...rest, onChange: _onChange, name, ...formHookProps, sx: { width: '100%' } }
+                                    function _onChange(e) {
+                                        formOnChange(e);
+                                        originalOnChange(e)
+                                    }
+                                    return React.cloneElement(element?.comp,
+                                        { ...restFormFieldsProps, ...element?.comp.props, onChange: _onChange, name, error: isError, ...formHookProps, sx: { width: '100%' } }
 
-                                        )
-                                    }}
-                                    rules={validation}
-                                />
-                            </Box>
+                                    )
+                                }}
+                                rules={validation}
+                            />
 
                             <Box sx={style.formErrorMsg || {}}>
                                 {errors[element.name]?.message ?
@@ -113,12 +111,12 @@ export function processingFormField(fields, theme, formHookProps, initData) {
                 ...element,
                 comp: ((formState) => {
                     const { errors } = formState
-
+                    const isError = !!errors[element.name]?.message;
                     const comp = element?.comp;
                     const name = element?.name;
 
                     return <>
-                        {React.cloneElement(comp, { ...comp.props, isFormComp: true, validation, name, formHookProps })}
+                        {React.cloneElement(comp, { ...comp.props, error: isError, isFormComp: true, validation, name, formHookProps })}
 
                         <Box sx={style.formErrorMsg || {}}>
                             {errors[element.name]?.message ?

@@ -18,7 +18,7 @@ const theme = createTheme({
   },
   form: {
     errorMsgFontSize: '12px',
-    errorMsgColor: red['A700'],
+    errorMsgColor: red['A400'],
     errorMsgTopSpace: '4px'
   },
   components: {
@@ -57,6 +57,13 @@ const theme = createTheme({
         },
       },
     },
+    MuiFormLabel: {
+      styleOverrides: {
+        asterisk: {
+          color: red.A400
+        }
+      }
+    }
   },
 });
 

@@ -1,24 +1,27 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import DropdownTreeSelect from "react-dropdown-tree-select";
 import { isEqual } from "lodash";
-
+import { Controller } from "react-hook-form";
 import withAPI from "../../../api/core";
 import "react-dropdown-tree-select/dist/styles.css";
 import "./index.css";
+import FormControl from '@mui/material/FormControl'
+import FormLabel from '@mui/material/FormLabel'
 
 function SelectWithTreeOptions({
   api,
   multiSelect,
-  defaultValue,
-  value,
   onOptionsChanged,
   url,
   addTopLevel,
   selectableType,
   displayParentSelected,
-  readOnly,
-  disabled,
-  placeholder,
+  formHookProps,
+  isFormComp,
+  name,
+  validation,
+  label,
+  error
 }) {
   const [state, setState] = useState({
     multiSelectEnabled: multiSelect,
@@ -123,16 +126,50 @@ function SelectWithTreeOptions({
       treeData: data,
       selectedNodePks: selectedNodes,
     }));
-    onOptionsChanged(selectedNodes);
+
+    if (typeof onOptionsChanged === 'function') {
+      onOptionsChanged(selectedNodes);
+    }
+
   };
 
-  return (
+  const SelectComp = (
     <DropdownTreeSelect
       data={state.treeData}
       onChange={onChange}
       className="mdl-demo"
     />
-  );
+  )
+
+  if (isFormComp) {
+    return (
+      <Controller
+        control={formHookProps.control}
+        name={name}
+        render={({ field }) => {
+          const { onChange: formHookOnChange, value, onFocus, ...restFormProps } = field
+          const data = getFormattedTreeData(state.treeData, value)
+
+          function _onChange(currentNode, selectedNodes) {
+            formHookOnChange(selectedNodes);
+            onChange(currentNode, selectedNodes)
+          }
+
+          return (
+            <FormControl error={error} required={validation.required}>
+              <FormLabel>{label}</FormLabel>
+              {React.cloneElement(SelectComp, { ...SelectComp.props, data, onChange: _onChange, focus: onFocus, ...restFormProps })}
+            </FormControl>
+          )
+
+        }}
+        rules={validation}
+
+      />
+    )
+  }
+
+  return SelectComp
 }
 
 export default withAPI(SelectWithTreeOptions);

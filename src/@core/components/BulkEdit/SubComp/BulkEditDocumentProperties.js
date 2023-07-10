@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography'
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import { grey } from "@mui/material/colors";
 import WarningMsgComp from "../../WarningMsgComp/WarningMsgComp";
+import SelectWithTreeOptions from "../../TreeSelect";
 
 
 const BulkEditDocumentProperties = (props) => {
@@ -148,11 +149,23 @@ const BulkEditDocumentProperties = (props) => {
                                         value: 'replace'
                                     }
                                 ]}
+                                label={"Mode"}
                                 size={'small'}
                             />
                         ),
                         validation: { required: true },
                         hideInLayout: true
+                    },
+                    {
+                        name: 'locations',
+                        comp: (
+                            <SelectWithTreeOptions
+                                url={'/StaffReady/v10/api/site/tree'}
+                                label={"Location"}
+                            />
+                        ),
+                        hideInLayout: true,
+                        // validation: { required: true },
                     }
                 ]}
                 customLayout={(fields, defaultLayout) => {
@@ -160,15 +173,15 @@ const BulkEditDocumentProperties = (props) => {
                         {defaultLayout}
                         <Box sx={{ mt: 2 }}>
                             <Box>
-                                Locations
-                            </Box>
-                            <Box>
                                 <WarningMsgComp
                                     message={"IMPORTANT: Documents that use Location Review Teams or Site Approvers will be affected by editing locations."}
                                 />
                             </Box>
                             <Box>
                                 {fields[5]}
+                            </Box>
+                            <Box>
+                                {fields[6]}
                             </Box>
 
 

@@ -13,13 +13,16 @@ import withAPI from "../../../../api/core";
 
 const BulkEditReviewersApprovals = (props) => {
     const sharedData = useBulkEditContext();
-    const { selectedRows, reviewers, finalReviewers, approvers } = sharedData.values
+    const { selectedRows, reviewers, finalReviewers, approvers, loader } = sharedData.values
     const { setReviewers, setFinalReviewers, setApprovers, setFormRef } = sharedData.methods
 
     const [persons, setPersons] = useState([]);
     const _formRef = useRef('');
 
     const { warningMsg, radioBtn, fieldNames, api } = props;
+
+    const modeField = fieldNames[0].value;
+    const employeeField = fieldNames[1].value
 
     const setState = {
         "reviewers": setReviewers,
@@ -43,22 +46,26 @@ const BulkEditReviewersApprovals = (props) => {
         setPersons(data?.persons || []);
     }, [reviewers, approvers, finalReviewers])
 
-    function personMapper(data) {
-        const email = data?.primaryEmail?.smtpAddress?.smtpAddressNm
-        return {
-            name: data?.name,
-            email: email,
-            personPk: data?.personPk
-        }
+    function employeeMapper(data) {
+        let persons = Array.isArray(data) ? data : [data];
+        return persons.map(person => {
+            const email = person?.primaryEmail?.smtpAddress?.smtpAddressNm
+            return {
+                name: person?.name,
+                email: email,
+                personPk: person?.personPk
+            }
+        })
+
     }
 
-    function addPerson(person, type) {
+    function addEmployee(person, type) {
         if (person) {
-            const mappedPerson = personMapper(person);
+            const mappedPerson = employeeMapper(person);
             setState[type]((state) => {
                 return {
                     ...state,
-                    persons: Array.isArray(state.persons) ? state.persons.concat(mappedPerson) : [mappedPerson]
+                    persons: Array.isArray(state.persons) ? state.persons.concat(mappedPerson) : mappedPerson
                 }
             });
         }
@@ -66,10 +73,10 @@ const BulkEditReviewersApprovals = (props) => {
 
 
     async function onFormChanged(data) {
-        const person = data[fieldNames?.[1].value];
+        const employees = data[employeeField];
         const type = props.type;
-        addPerson(person, type)
-        const mode = data[fieldNames?.[0].value];
+        addEmployee(employees, type)
+        const mode = data[modeField];
         setState[type](state => {
             return { ...state, mode }
 
@@ -106,6 +113,7 @@ const BulkEditReviewersApprovals = (props) => {
                         name: fieldNames?.[0]?.value,
                         comp: (
                             <RadioButtonGroup
+                                label={"Mode"}
                                 buttonList={[
                                     {
                                         value: radioBtn?.[0]?.value || 'val1',
@@ -133,6 +141,7 @@ const BulkEditReviewersApprovals = (props) => {
                                     </Button>
                                 )}
                                 selectionType={"employee"}
+                                enableSelectAll={true}
                             />
                         )
                     }
@@ -141,9 +150,10 @@ const BulkEditReviewersApprovals = (props) => {
 
             <CustomGrid
                 rows={persons}
-                hideFilter={true}
+                paginationWhenNeeded={true}
                 getRowId={(row) => row.name + row.mail + Math.random()}
-                hideFooter={true}
+                // hideFooter={true}
+                loading={loader}
                 columns={[
                     {
                         field: "name",
