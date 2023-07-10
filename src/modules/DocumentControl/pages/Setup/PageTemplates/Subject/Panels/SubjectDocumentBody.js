@@ -18,6 +18,7 @@ function SubjectDocumentBody(props) {
   const [documents, setDocuments] = useState([]);
   const [dataLoading, setDataLoading] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [bulkEditModalKey, setBulkEditModalKey] = useState('bulkEditModal')
 
 
   useEffect(() => {
@@ -36,6 +37,11 @@ function SubjectDocumentBody(props) {
 
   }
 
+
+  const onCloseBulkEditModal = () => {
+    setIsOpenModal(false)
+    setBulkEditModalKey('bulkEditModalReset')
+  }
 
   return (
     <>
@@ -103,8 +109,9 @@ function SubjectDocumentBody(props) {
 
       <BulkEditModal
         isOpen={isOpenModal}
-        onClose={() => setIsOpenModal(false)}
+        onClose={onCloseBulkEditModal}
         documents={documents}
+        key={bulkEditModalKey}
       />
     </>
   );

@@ -12,6 +12,7 @@ import { CustomStyledTreeItem } from './Style';
 import CustomTree from '../CustomTree/CustomTree';
 import { extractValueFromObjPath } from '../../utils/GeneralUtils';
 import Button from '@mui/material/Button'
+import { useBulkEditContext } from '../../../modules/DocumentControl/pages/Setup/Context';
 
 const TreeSelection = React.forwardRef((props, ref) => {
 
@@ -24,10 +25,14 @@ const TreeSelection = React.forwardRef((props, ref) => {
         mode,
         validation,
         displayPortion = 'text',
-        isFormComp,
         formHookProps,
-        customLayout
+        customLayout,
+        error,
+        enableSelectAll
     } = props;
+
+    const sharedData = useBulkEditContext();
+    const { setLoader } = sharedData.methods;
 
     const [isOpen, setIsOpen] = useState(false);
     const [selectedData, setSelectedData] = useState({ text: '[no set]', value: '' });
@@ -41,6 +46,7 @@ const TreeSelection = React.forwardRef((props, ref) => {
 
     const onSelectedData = async (selectedData, mode) => {
         let data = selectedData
+        setIsOpen(false);
         if (mode === 'requestSummery') {
             // setSelectLoading(true)
             const resp = await api.common.employeeSummery(selectedData.value)
@@ -48,10 +54,32 @@ const TreeSelection = React.forwardRef((props, ref) => {
             data = resp.data
 
         }
-        setIsOpen(false);
         setSelectedData(data);
         formHookProps.setValue(name, data);
         formHookProps.trigger(name);
+
+    }
+
+    const onSelectAll = async (data, mode) => {
+        setIsOpen(false);
+        if (mode === 'requestSummery') {
+
+            const callPromises = []
+            for (let node of data) {
+                const promise = api.common.employeeSummery(node.value)
+                callPromises.push(promise);
+            }
+            setLoader(true)
+            const resp = await Promise.all(callPromises)
+            setLoader(false);
+            console.log(resp)
+            const employees = resp.map(employee => employee.data)
+            setSelectedData(employees);
+            formHookProps.setValue(name, employees);
+            formHookProps.trigger(name);
+
+        }
+
 
     }
 
@@ -65,7 +93,7 @@ const TreeSelection = React.forwardRef((props, ref) => {
 
             customLayout({ label, displayLabel, openModal }) :
 
-            <FormControl required={true}>
+            <FormControl error={error} required={validation.required}>
                 <FormLabel>
                     {label}
                 </FormLabel>
@@ -115,7 +143,8 @@ const TreeSelection = React.forwardRef((props, ref) => {
                                 onSelection={(data) => onSelectedData(data, 'requestSummery')}
                                 styledTreeItem={() => <CustomStyledTreeItem />}
                                 key={'Department'}
-                            // selectLoading={selectLoading}
+                                enableSelectionAll={enableSelectAll}
+                                onSelectAll={(data) => onSelectAll(data, 'requestSummery')}
                             />
                         )
                     },
@@ -130,7 +159,9 @@ const TreeSelection = React.forwardRef((props, ref) => {
                                 onSelection={(data) => onSelectedData(data, 'requestSummery')}
                                 styledTreeItem={() => <CustomStyledTreeItem />}
                                 key={'Job Title'}
-                            // selectLoading={selectLoading}
+                                enableSelectionAll={enableSelectAll}
+                                onSelectAll={(data) => onSelectAll(data, 'requestSummery')}
+
                             />
                         )
 
@@ -146,7 +177,9 @@ const TreeSelection = React.forwardRef((props, ref) => {
                                 onSelection={(data) => onSelectedData(data, 'requestSummery')}
                                 styledTreeItem={() => <CustomStyledTreeItem />}
                                 key={'Schedule'}
-                            // selectLoading={selectLoading}
+                                enableSelectionAll={enableSelectAll}
+                                onSelectAll={(data) => onSelectAll(data, 'requestSummery')}
+
                             />
                         )
                     },
@@ -161,7 +194,8 @@ const TreeSelection = React.forwardRef((props, ref) => {
                                 onSelection={(data) => onSelectedData(data, 'requestSummery')}
                                 styledTreeItem={() => <CustomStyledTreeItem />}
                                 key={'Skillset'}
-                            // selectLoading={selectLoading}
+                                enableSelectionAll={enableSelectAll}
+                                onSelectAll={(data) => onSelectAll(data, 'requestSummery')}
                             />
                         )
                     }

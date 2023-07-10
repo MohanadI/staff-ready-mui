@@ -23,6 +23,7 @@ const BulkEditModal = (props) => {
     const [finalReviewers, setFinalReviewers] = useState({});
     const [approvers, setApprovers] = useState({});
     const [formRef, setFormRef] = useState();
+    const [loader, setLoader] = useState(false);
 
     const contextVal = {
         values: {
@@ -32,8 +33,8 @@ const BulkEditModal = (props) => {
             reviewers,
             finalReviewers,
             approvers,
-            formRef
-
+            formRef,
+            loader
         },
         methods: {
             setSelectedRows,
@@ -41,7 +42,8 @@ const BulkEditModal = (props) => {
             setApprovers,
             setFinalReviewers,
             setReviewers,
-            setFormRef
+            setFormRef,
+            setLoader
         }
     }
 

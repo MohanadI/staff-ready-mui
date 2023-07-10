@@ -7,11 +7,13 @@ import CustomHeader from './SubComponents/CustomHeader';
 
 
 
-export const CustomGrid = forwardRef(({ rows, columns, onSelectRow, pageSize = 10, ...others }, ref) => {
+export const CustomGrid = forwardRef(({ rows, columns, onSelectRow, pageSize = 10, paginationWhenNeeded, hideFooter, hideFilter, ...others }, ref) => {
 
     const [_rows, setRows] = useState(rows);
     const [filteredRows, setFilteredRows] = useState([])
     const [_columns, setColumns] = useState(columns);
+    const [_hideFooter, setHideFooter] = useState(false)
+    const [_hideFilter, setHideFilter] = useState(false)
 
     const pageSizeOptions = [8, 10, 12, 15, 20, 30]
     const apiRef = useGridApiRef("");
@@ -31,6 +33,26 @@ export const CustomGrid = forwardRef(({ rows, columns, onSelectRow, pageSize = 1
     useEffect(() => {
         processCols(columns)
     }, [columns, _rows])
+
+    useEffect(() => {
+        if (paginationWhenNeeded) {
+            if (rows.length > pageSize) {
+                setHideFooter(false);
+                setHideFilter(false);
+            } else {
+                setHideFooter(true);
+                setHideFilter(true);
+            }
+        } else {
+            setHideFilter(hideFilter);
+            setHideFooter(hideFooter);
+        }
+
+    }, [hideFooter, paginationWhenNeeded, hideFilter, rows])
+
+    useEffect(() => {
+
+    }, [others.hideFilter, paginationWhenNeeded])
 
     //-------------------------------------------------------------------
 
@@ -92,6 +114,8 @@ export const CustomGrid = forwardRef(({ rows, columns, onSelectRow, pageSize = 1
                 }}
                 apiRef={apiRef}
                 pageSizeOptions={pageSizeOptions}
+                hideFooter={_hideFooter}
+                hideFilter={_hideFilter}
                 {...others}
             />
         </Box>

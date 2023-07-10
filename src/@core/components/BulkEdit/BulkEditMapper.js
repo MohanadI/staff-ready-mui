@@ -10,13 +10,11 @@ class BulkEditMappers {
             recurAssessment: data?.documentProperties?.revisionSchedule,
             access: data?.documentProperties?.access,
             locationsAddReplace: data?.documentProperties?.locationMode,
-            // "locationPks": [
-            //     "-2147477988"
-            // ],
+            locationPks: data?.documentProperties?.locations?.map(location => location.value),
             reviewersAddReplace: data?.reviewers?.mode,
             reviewerPks: data?.reviewers?.persons?.map(person => person.personPk),
             finalReviewersAddReplace: data?.finalReviewers?.mode,
-            finalReviewerPks: data?.finalReviewers?.persons.map(person => person.personPk),
+            finalReviewerPks: data?.finalReviewers?.persons?.map(person => person.personPk),
             approversAddReplace: data?.approvers?.mode,
             approverPks: data?.approvers?.persons?.map(person => person.personPk)
         }
