@@ -1,7 +1,8 @@
 import React from 'react';
 import { useLocationAPI } from "./location";
-// add toast
 import axios from "axios";
+
+import { useSnackbar } from '../@core/hooks/useSnackbar';
 import { useDocumentImproveAPI } from "./documentimprove";
 import { useSubjectApi } from './subject';
 import { useClassificationAPI } from './classificaiton';
@@ -24,7 +25,7 @@ import { useCommonAPI } from './common';
  * @returns An object containing API functions. Pass this object to other API hooks to enable APIs
  */
 export const useAPI = () => {
-    //const { addToast } = useToasts();
+    const { showSnackbar, SnackbarComponent } = useSnackbar();
 
     const api = {
         get: function (url, callback, errorCallback) {
@@ -35,20 +36,25 @@ export const useAPI = () => {
                 })
                 .catch((error) => {
                     console.error(error);
-                    //addToast("Error loading  data", {appearance: 'error', autoDismiss: false})
+                    showSnackbar('Error loading data', 'error');
                     errorCallback && errorCallback(error);
                     return error;
                 })
         },
         post: function (url, payload, callback, errorCallback, params) {
-            return axios.post(url, payload, params)
-                .then((response) => {
-                    callback && callback(response.data)
-                    return response
-                })
+            return axios({
+                method: "POST",
+                url: url,
+                data: payload,
+                params: params
+            }).then((response) => {
+                showSnackbar('Success', 'success');
+                callback && callback(response.data)
+                return response
+            })
                 .catch((error) => {
                     console.error(error);
-                    //addToast("Error loading  data", {appearance: 'error', autoDismiss: false})
+                    showSnackbar('Error loading data', 'error');
                     errorCallback && errorCallback(error);
                     return error;
                 })
@@ -59,13 +65,16 @@ export const useAPI = () => {
         }
     }
 
-    return api
+    return {
+        api,
+        SnackbarComponent,
+    };
 }
 
 
 function withAPI(Component, enabledAPIs) {
     return (props) => {
-        const api = useAPI();
+        const { api, SnackbarComponent } = useAPI();
 
         //Each API can do its own check if it's enabled or not
         //We can't use conditional logic here otherwise we'll violate the Rule of Hooks
@@ -76,10 +85,14 @@ function withAPI(Component, enabledAPIs) {
         useCommonAPI(api, enabledAPIs);
 
         return (
-            <Component
-                api={api}
-                {...props}
-            />
+            <>
+                <SnackbarComponent />
+                <Component
+                    api={api}
+                    {...props}
+                />
+            </>
+
         );
     };
 }
