@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -12,6 +12,7 @@ import Form from "../../../../../@core/components/Form/Form";
 import AutoCompleteComp from "../../../../../@core/components/AutoCompleteComp/AutoCompleteComp";
 import TreeSelection from "../../../../../@core/components/TreeSelection/TreeSelection";
 import SelectWithTreeOptions from "../../../../../@core/components/TreeSelect";
+import Context from "../Context";
 
 const LoadingContainer = styled(Box)`
   display: flex;
@@ -22,8 +23,8 @@ const LoadingContainer = styled(Box)`
 
 function DocumentAddForm({ api }) {
   const formRef = useRef("");
+  const { handleContextDataChange } = useContext(Context);
   const [isLoading, setIsLoading] = useState(true);
-  const [locationPks, setLocationPks] = useState([]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -32,19 +33,23 @@ function DocumentAddForm({ api }) {
 
     return () => clearTimeout(timer);
   }, []);
-  const save = (data) => {
-    data.locationPks = locationPks.map((item) => item.value);
+  const save = async (data) => {
+    data.locationPks = data.locationPks.map((item) => item.value);
     data.parentPk = data.parentPk.value;
     data.subjectPk = data.subjectPk.value;
-    api.subject.create_document(
+    setIsLoading(true);
+    await api.subject.create_document(
       data,
       () => {
+        handleContextDataChange(false, "openAddModal");
+        handleContextDataChange(true, "reloadTreeData");
         console.log("success");
       },
       () => {
         console.log("error");
       }
     );
+    setIsLoading(false);
   };
   return (
     <>
@@ -95,15 +100,14 @@ function DocumentAddForm({ api }) {
               {
                 comp: (
                   <SelectWithTreeOptions
-                    onOptionsChanged={(selectedNodes) => {
-                      setLocationPks(selectedNodes);
-                    }}
+                    label={"locations"}
                     multiSelect={true}
                     url="/StaffReady/v10/api/site/tree"
                     selectableType="location"
                     displayParentSelected={true}
                     placeholder="Choose one or more"
                     loadImmediate={true}
+
                   />
                 ),
                 name: "locationPks",
