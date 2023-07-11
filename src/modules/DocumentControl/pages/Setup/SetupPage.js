@@ -252,7 +252,7 @@ function SetupPage({ api }) {
             <PerfectScrollbar
               style={{ height: height - 200, paddingRight: 10 }}
             >
-              {template}
+              <>{template}</>
             </PerfectScrollbar>
           </Grid>
         </Grid>

@@ -1,5 +1,5 @@
 #tree-select-container {
-    width: 210px;
+    width: 100%;
     display: table;
     border-spacing: 0px;
     text-align: left;
@@ -50,6 +50,7 @@
                 border-radius: 2px;
                 display: inline-flex; /* Does not work in IE; this means that the 'X' on the deselect tags will be slighly off center */
                 align-items: center;
+                font-size: 14px;
 
                 .tag-remove {
                     font-size: 100%;
@@ -94,15 +95,15 @@
 .toggle.expanded:after {
     font-size: 80%;
     vertical-align: middle;
-    font-family: "fonticons" !important;
-    content: "\ed5e"; /* font icon: icon-minus-3 */
+    font-family: "Material Icons";
+    content: "\2212"; /* font icon: icon-minus-3 */
 }
 
 .toggle.collapsed:after {
     font-size: 80%;
     vertical-align: middle;
-    font-family: "fonticons" !important;
-    content: "\ed5d"; /* font icon: icon-plus-3 */
+    font-family: "Material Icons";
+    content: "\002B"; /* font icon: icon-plus-3 */
 }
 
 .react-dropdown-tree-select .dropdown .dropdown-trigger.arrow.bottom:after,
@@ -112,8 +113,8 @@
 
 .dropdown-trigger.arrow.bottom .tag-list > li:last-child:after {
     /* content: "\25BC";   */
-    content: "\edc1"; /* down arrow */
-    font-family: "fonticons" !important;
+    content: "\002B"; /* down arrow */
+    font-family: "Material Icons";
     line-height: 1;
     -webkit-font-smoothing: antialiased;
 }
@@ -124,7 +125,7 @@
     line-height: 20px;
     display: table-cell;
     overflow: auto;
-    border: 1px solid black;
+    border: 1px solid #c4c4c4;
     text-align: left !important;
     &:hover {
         color: black; //override
@@ -137,8 +138,8 @@
 }
 
 .dropdown-trigger.arrow.top .tag-list > li:last-child:after {
-    content: "\eb30"; /* search icon */
-    font-family: "fonticons" !important;
+    content: "\2212"; /* search icon */
+    font-family: "Material Icons";
     line-height: 1;
     -webkit-font-smoothing: antialiased;
 }
