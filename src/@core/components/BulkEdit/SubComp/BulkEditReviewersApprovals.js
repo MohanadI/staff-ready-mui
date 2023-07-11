@@ -13,10 +13,11 @@ import withAPI from "../../../../api/core";
 
 const BulkEditReviewersApprovals = (props) => {
     const sharedData = useBulkEditContext();
-    const { selectedRows, reviewers, finalReviewers, approvers, loader } = sharedData.values
+    const { selectedRows, reviewers, finalReviewers, approvers } = sharedData.values
     const { setReviewers, setFinalReviewers, setApprovers, setFormRef } = sharedData.methods
 
     const [persons, setPersons] = useState([]);
+    const [gridLoader, setGridLoader] = useState(false);
     const _formRef = useRef('');
 
     const { warningMsg, radioBtn, fieldNames, api } = props;
@@ -142,6 +143,7 @@ const BulkEditReviewersApprovals = (props) => {
                                 )}
                                 selectionType={"employee"}
                                 enableSelectAll={true}
+                                setExternalLoader={setGridLoader}
                             />
                         )
                     }
@@ -152,8 +154,7 @@ const BulkEditReviewersApprovals = (props) => {
                 rows={persons}
                 paginationWhenNeeded={true}
                 getRowId={(row) => row.name + row.mail + Math.random()}
-                // hideFooter={true}
-                loading={loader}
+                loading={gridLoader}
                 columns={[
                     {
                         field: "name",

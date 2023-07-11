@@ -28,11 +28,11 @@ const TreeSelection = React.forwardRef((props, ref) => {
         formHookProps,
         customLayout,
         error,
-        enableSelectAll
+        enableSelectAll,
+        setExternalLoader
     } = props;
 
     const sharedData = useBulkEditContext();
-    const { setLoader } = sharedData.methods;
 
     const [isOpen, setIsOpen] = useState(false);
     const [selectedData, setSelectedData] = useState({ text: '[no set]', value: '' });
@@ -69,10 +69,9 @@ const TreeSelection = React.forwardRef((props, ref) => {
                 const promise = api.common.employeeSummery(node.value)
                 callPromises.push(promise);
             }
-            setLoader(true)
+            setExternalLoader?.(true)
             const resp = await Promise.all(callPromises)
-            setLoader(false);
-            console.log(resp)
+            setExternalLoader?.(false);
             const employees = resp.map(employee => employee.data)
             setSelectedData(employees);
             formHookProps.setValue(name, employees);
