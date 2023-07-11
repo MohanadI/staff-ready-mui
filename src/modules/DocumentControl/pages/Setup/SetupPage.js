@@ -114,6 +114,7 @@ function SetupPage({ api }) {
     addComponentData: AddComponentTypes.subject,
     isLoading: false,
     openAddModal: false,
+    reloadTreeData: false
   });
 
   const handleContextDataChange = (value, key) => {
@@ -126,7 +127,7 @@ function SetupPage({ api }) {
   useEffect(() => {
     const { activeTab } = state;
 
-    if (activeTab) {
+    if (activeTab || state.reloadTreeData) {
       setState((prevState) => ({
         ...prevState,
         isLoading: true,
@@ -145,7 +146,7 @@ function SetupPage({ api }) {
         }));
       });
     }
-  }, [state.activeTab]);
+  }, [state.activeTab, state.reloadTreeData]);
 
   useEffect(() => {
     const { selectedNode, activeTab } = state;

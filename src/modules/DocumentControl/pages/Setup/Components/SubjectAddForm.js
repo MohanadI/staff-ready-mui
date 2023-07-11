@@ -21,7 +21,7 @@ const LoadingContainer = styled(Box)`
 
 function SubjectAddForm({ api }) {
   const formRef = useRef("");
-  const { setupPageData } = useContext(Context);
+  const { setupPageData, handleContextDataChange } = useContext(Context);
   const [isLoading, setIsLoading] = useState(true);
   const [subjectPk, setSubjectPk] = useState("");
 
@@ -41,6 +41,8 @@ function SubjectAddForm({ api }) {
       data,
       () => {
         console.log("success");
+        handleContextDataChange(false, "openAddModal");
+        handleContextDataChange(true, "reloadTreeData");
       },
       () => {
         console.log("error");
@@ -55,15 +57,6 @@ function SubjectAddForm({ api }) {
       }
     );
     setIsLoading(false);
-  };
-
-  const auditContext = () => {
-    return {
-      auditContextClass:
-        "com.maplewoodsoftware.colorbar.documentcontrol.subject.SubjectColorBar",
-      navigationLabelId: "SubjectPk",
-      navigationPk: subjectPk,
-    };
   };
 
   return (
