@@ -3,6 +3,7 @@ import React, { useEffect, useContext, useState } from "react";
 import Context from "../../Context";
 import AccordionComponent from "../../../../../../@core/components/Accordion";
 import DocumentStatus from "./Panels/DocumentStatus"
+import DocumentPropertiesBody from "./Panels/DocumentProperties/DocumentPropertiesBody";
 
 export default function DocumentsTemplate() {
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +44,7 @@ export default function DocumentsTemplate() {
       id: "documentproperties",
       pk: setupPageData.selectedNode.value,
       description: "",
-      body: <></>,
+      body: <DocumentPropertiesBody />,
     },
     {
       key: "reviewers",
