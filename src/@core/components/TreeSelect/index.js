@@ -4,9 +4,9 @@ import { isEqual } from "lodash";
 import { Controller } from "react-hook-form";
 import withAPI from "../../../api/core";
 import "react-dropdown-tree-select/dist/styles.css";
-import "./index.css";
-import FormControl from '@mui/material/FormControl'
-import FormLabel from '@mui/material/FormLabel'
+import "./TreeSelectStyle.scss";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 
 function SelectWithTreeOptions({
   api,
@@ -21,7 +21,7 @@ function SelectWithTreeOptions({
   name,
   validation,
   label,
-  error
+  error,
 }) {
   const [state, setState] = useState({
     multiSelectEnabled: multiSelect,
@@ -86,10 +86,10 @@ function SelectWithTreeOptions({
       const children = nodeData.children;
       const label = nodeData.text || nodeData.label;
 
-      const selectableType = selectableType || type;
-      const disabledParentNode = type !== selectableType;
+      const selectableTypeValue = selectableType || type;
+      const disabledParentNode = type !== selectableTypeValue;
       const isNodeSelected =
-        type === selectableType && isSelectedNode(value, selectedNodePks);
+        type === selectableTypeValue && isSelectedNode(value, selectedNodePks);
 
       tempData.push({
         value: value,
@@ -113,8 +113,9 @@ function SelectWithTreeOptions({
 
   const isSelectedNode = (nodePk, selectedNodePks) => {
     if (!selectedNodePks) return false;
-    for (let i = 0; i < selectedNodePks.length; i++) {
-      if (selectedNodePks[i].value === nodePk) return true;
+    const filteredNodes = selectedNodePks.filter((v) => v.value === nodePk);
+    if (filteredNodes.length > 0) {
+      return true;
     }
     return false;
   };
@@ -127,19 +128,19 @@ function SelectWithTreeOptions({
       selectedNodePks: selectedNodes,
     }));
 
-    if (typeof onOptionsChanged === 'function') {
+    if (typeof onOptionsChanged === "function") {
       onOptionsChanged(selectedNodes);
     }
-
   };
 
   const SelectComp = (
     <DropdownTreeSelect
       data={state.treeData}
       onChange={onChange}
-      className="mdl-demo"
+      className={"treeSelect"}
+      id={"tree-select-container"}
     />
-  )
+  );
 
   if (isFormComp) {
     return (
@@ -147,29 +148,38 @@ function SelectWithTreeOptions({
         control={formHookProps.control}
         name={name}
         render={({ field }) => {
-          const { onChange: formHookOnChange, value, onFocus, ...restFormProps } = field
-          const data = getFormattedTreeData(state.treeData, value)
+          const {
+            onChange: formHookOnChange,
+            value,
+            onFocus,
+            ...restFormProps
+          } = field;
+          const data = getFormattedTreeData(state.treeData, value);
 
           function _onChange(currentNode, selectedNodes) {
             formHookOnChange(selectedNodes);
-            onChange(currentNode, selectedNodes)
+            onChange(currentNode, selectedNodes);
           }
 
           return (
             <FormControl error={error} required={validation.required}>
               <FormLabel>{label}</FormLabel>
-              {React.cloneElement(SelectComp, { ...SelectComp.props, data, onChange: _onChange, focus: onFocus, ...restFormProps })}
+              {React.cloneElement(SelectComp, {
+                ...SelectComp.props,
+                data,
+                onChange: _onChange,
+                focus: onFocus,
+                ...restFormProps,
+              })}
             </FormControl>
-          )
-
+          );
         }}
         rules={validation}
-
       />
-    )
+    );
   }
 
-  return SelectComp
+  return SelectComp;
 }
 
 export default withAPI(SelectWithTreeOptions);
