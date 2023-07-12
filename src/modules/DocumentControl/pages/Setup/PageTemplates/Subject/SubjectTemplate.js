@@ -20,6 +20,7 @@ function SubjectTemplate({ api }) {
     }, 1500);
   }, [setupPageData]);
 
+
   const panels = [
     // {
     //   key: 'subject_search',

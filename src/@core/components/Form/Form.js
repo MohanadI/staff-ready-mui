@@ -12,7 +12,7 @@ import { isEqual } from 'lodash';
 
 const Form = React.forwardRef((props, ref) => {
 
-    const { colPerRow, fields, actions, defaultValues, mode = "onTouched", onChange, onChangeDep, onSubmit, initData } = props;
+    const { colPerRow, fields, actions, defaultValues, mode = "onTouched", onChange, onChangeDep, onSubmit, initData, readOnly } = props;
 
     const [defaultVal] = useState(() => getDefaultValues(defaultValues, fields));
     const [colWidth, setColWidth] = useState(4);
@@ -24,10 +24,10 @@ const Form = React.forwardRef((props, ref) => {
 
     useEffect(() => {
 
-        const _fields = processingFormField(fields, theme, restFormProps, initData);
+        const _fields = processingFormField(fields, theme, restFormProps, initData, readOnly);
         setFieldsComp(_fields);
 
-    }, [props.fields])
+    }, [props.fields, props.readOnly])
 
 
     useEffect(() => {
@@ -108,14 +108,14 @@ const Form = React.forwardRef((props, ref) => {
 
                     <Grid item md={12}>
                         {props.hasOwnProperty('customLayout') && typeof props.customLayout === 'function' ?
-                            props.customLayout(calledFields, defaultLayout)
+                            props.customLayout(calledFields, defaultLayout, actions)
                             :
                             defaultLayout
                         }
                     </Grid>
 
                     {props.hasOwnProperty('customAction') && typeof props.customAction === 'function' ?
-                        props.customView(calledFields) :
+                        props.customLayout(calledFields) :
                         <Grid item md={12}>
                             <Stack direction={'row'} spacing={1}>
                                 {actions?.map((action, idx) => {

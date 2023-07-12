@@ -2,6 +2,9 @@ import AutoComplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 import React, { useEffect, useState } from 'react'
 import { Controller } from 'react-hook-form';
+import FormControl from '@mui/material/FormControl'
+import FormLabel from '@mui/material/FormLabel'
+import FormHelperText from '@mui/material/FormHelperText'
 
 
 const AutoCompleteComp = (props) => {
@@ -52,7 +55,10 @@ const AutoCompleteComp = (props) => {
     const AutoCompleteComp = (
         <AutoComplete
             autoComplete
-            renderInput={(params) => <TextField {...params} error={error} label={label}
+            renderInput={(params) => <TextField {...params} InputLabelProps={props.InputLabelProps}
+                error={error} label={<FormControl error={error} required={!!rest?.validation?.required}>
+                    <FormLabel> {label}</FormLabel>
+                </FormControl>}
             />}
             onInputChange={onInputChange}
             renderOption={(props, option) => {

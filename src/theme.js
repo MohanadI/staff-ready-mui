@@ -41,7 +41,7 @@ const theme = createTheme({
           borderRadius: "0 !important",
         },
         input: {
-          fontSize: "0.85rem",
+          // fontSize: "0.85rem",
           padding: "9px",
         },
       },

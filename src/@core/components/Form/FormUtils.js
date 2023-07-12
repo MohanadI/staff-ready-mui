@@ -2,9 +2,15 @@ import cloneDeep from 'lodash/cloneDeep';
 import { isThirdPartyComponent } from '../../utils/GeneralUtils';
 import { Controller } from 'react-hook-form';
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, InputLabel } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import Style from './Style';
+import FormControl from '@mui/material/FormControl'
+import FormLabel from '@mui/material/FormLabel'
+import FormHelperText from '@mui/material/FormHelperText'
+
+
+
 
 
 
@@ -48,7 +54,7 @@ export function calcColWidth(colPerRow, fieldsCount) {
     return _colWidth;
 }
 
-export function processingFormField(fields, theme, formHookProps, initData) {
+export function processingFormField(fields, theme, formHookProps, initData, readOnly) {
     const style = Style(theme);
 
     const { control, register } = formHookProps
@@ -62,6 +68,25 @@ export function processingFormField(fields, theme, formHookProps, initData) {
         } else {
             formHookProps.setValue(name, null)
 
+        }
+
+        if (element?.comp?.readOnly || readOnly) {
+            const { label, displayPortion = "text" } = element?.comp?.props;
+
+            return {
+                ...element,
+                comp: () => {
+                    return (
+                        <FormControl>
+                            <FormLabel>{label}</FormLabel>
+                            <Box>
+                                {typeof initData?.[name] === 'object' ? initData?.[name][displayPortion] : initData?.[name]}
+                            </Box>
+                        </FormControl>
+                    )
+
+                }
+            }
         }
 
         if (isThirdPartyComponent(element?.comp)) {
@@ -80,13 +105,22 @@ export function processingFormField(fields, theme, formHookProps, initData) {
                                 render={({ field }) => {
                                     const { onChange: formOnChange, ...restFormFieldsProps } = field
                                     const originalOnChange = element?.comp?.props?.onChange || (() => { })
+                                    const { label } = element?.comp.props;
 
                                     function _onChange(e) {
                                         formOnChange(e);
                                         originalOnChange(e)
                                     }
-                                    return React.cloneElement(element?.comp,
-                                        { ...restFormFieldsProps, ...element?.comp.props, onChange: _onChange, name, error: isError, ...formHookProps, sx: { width: '100%' } }
+
+
+
+                                    const _label = label ? <FormControl error={isError} required={!!validation.required}>
+                                        <FormLabel> {label}</FormLabel>
+                                    </FormControl> : null
+
+                                    return (
+                                        React.cloneElement(element?.comp,
+                                            { ...restFormFieldsProps, ...element?.comp.props, onChange: _onChange, label: _label, name, error: isError, ...formHookProps, sx: { width: '100%' } })
 
                                     )
                                 }}

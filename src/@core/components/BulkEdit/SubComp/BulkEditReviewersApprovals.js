@@ -48,6 +48,7 @@ const BulkEditReviewersApprovals = (props) => {
     }, [reviewers, approvers, finalReviewers])
 
     function employeeMapper(data) {
+
         let persons = Array.isArray(data) ? data : [data];
         return persons.map(person => {
             const email = person?.primaryEmail?.smtpAddress?.smtpAddressNm
