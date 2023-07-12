@@ -10,7 +10,7 @@ import React from 'react'
 
 const RadioButtonGroup = (props) => {
 
-    const { label, onChange, buttonList, defaultValue, isFormComp, name, validation, formHookProps, size, ...rest } = props;
+    const { label, onChange, buttonList, defaultValue, isFormComp, name, validation, formHookProps, size, error, ...rest } = props;
 
     const RadioGroupCmp = (
         <RadioGroup aria-label="" defaultValue={defaultValue} onChange={onChange}>
@@ -25,7 +25,7 @@ const RadioButtonGroup = (props) => {
 
 
     return (
-        <FormControl component="fieldset">
+        <FormControl component="fieldset" required={validation.required} error={error}>
             <FormLabel component="legend">{label}</FormLabel>
             {isFormComp ?
                 <Controller

@@ -57,6 +57,19 @@ const CustomTree = (props) => {
 
   }, [props.data]);
 
+  const filterSelectionType = (node, result) => {
+    if (node.type === props.selectionType) {
+      result.push({ text: node.text, value: node.value, type: node.type })
+    }
+    if (!node.children || node.children.length === 0) {
+      return;
+    }
+    for (let subNode of node.children) {
+      filterSelectionType(subNode, result);
+    }
+
+  }
+
   const renderData = (TreeData, level) => {
     return TreeData?.map(node => {
       let label = node.text
@@ -90,6 +103,23 @@ const CustomTree = (props) => {
         );
       }
 
+      let selectAllBtb = "";
+      if (props.enableSelectionAll && node.type !== props.selectionType) {
+        selectAllBtb = (
+          <Button size={'small'} disabled={props.selectLoading} variant="outlined" onClick={(e) => {
+
+            const selectionData = [];
+            filterSelectionType(node, selectionData)
+
+            if (typeof props.onSelectAll === 'function') {
+              props.onSelectAll(selectionData, e, props.selectionType);
+            }
+          }}>
+            Select All
+          </Button>
+        )
+      }
+
       label = (
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Box>
@@ -105,19 +135,18 @@ const CustomTree = (props) => {
               {TreeItemLabelWithIcon}
 
             </Box>
+
             {node.type === props.selectionType ?
               <Button size={'small'} disabled={props.selectLoading} variant="outlined" onClick={(e) => {
                 if (typeof props.onSelection === 'function') {
                   props.onSelection(node, e);
                 }
               }}>
-                {props.selectLoading ?
-                  <CircularProgress />
-
-                  : null}
                 Select
               </Button>
-              : null}
+              :
+
+              props.enableSelectionAll ? selectAllBtb : null}
 
           </Box>
         )

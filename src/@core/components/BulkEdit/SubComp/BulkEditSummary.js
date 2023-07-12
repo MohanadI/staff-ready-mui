@@ -67,20 +67,19 @@ const BulkEditSummary = () => {
                 <Grid item md={4}>
                     <FormControl>
                         <FormLabel>{`${documentProperties?.locationMode?.toUpperCase()} Locations`}</FormLabel>
+                        {documentProperties?.locations?.map((location) => {
+                            return (
+                                <Box>
+                                    {location.label}
+                                </Box>
+                            )
+                        })}
 
-                        <FormHelperText sx={{ ml: 0 }}>Locations:</FormHelperText>
-                        <Box>
-
-                        </Box>
                     </FormControl>
                 </Grid>
                 <Grid item md={4}>
                     <FormControl>
                         <FormLabel>{`${reviewers?.mode?.toUpperCase()} Reviewers`}</FormLabel>
-                        {reviewers?.persons?.length ?
-                            <FormHelperText sx={{ ml: 0 }}>Reviewers:</FormHelperText>
-
-                            : null}
                         <Box>
                             {reviewers?.persons?.map((person, idx) => {
                                 return (
@@ -96,10 +95,6 @@ const BulkEditSummary = () => {
                 <Grid item md={4}>
                     <FormControl>
                         <FormLabel>{`${finalReviewers?.mode?.toUpperCase()} final Reviewers`}</FormLabel>
-                        {finalReviewers?.persons?.length ?
-                            <FormHelperText sx={{ ml: 0 }}>Final Reviewers:</FormHelperText>
-
-                            : null}
                         <Box>
                             {finalReviewers?.persons?.map((person, idx) => {
                                 return (
@@ -115,10 +110,6 @@ const BulkEditSummary = () => {
                 <Grid item md={4}>
                     <FormControl>
                         <FormLabel sx={{ ml: 0 }}>{`${approvers?.mode?.toUpperCase()} Approvers`}</FormLabel>
-                        {approvers?.persons?.length ?
-                            <FormHelperText sx={{ ml: 0 }}>Approvers:</FormHelperText>
-
-                            : null}
                         <Box>
                             {approvers?.persons?.map((person, idx) => {
                                 return (
