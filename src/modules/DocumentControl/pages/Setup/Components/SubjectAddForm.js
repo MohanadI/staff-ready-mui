@@ -41,8 +41,10 @@ function SubjectAddForm({ api }) {
       data,
       () => {
         console.log("success");
-        handleContextDataChange(false, "openAddModal");
-        handleContextDataChange(true, "reloadTreeData");
+        setTimeout(function () {
+          handleContextDataChange(false, "openAddModal");
+          handleContextDataChange(true, "reloadTreeData");
+        }, 2000);
       },
       () => {
         console.log("error");

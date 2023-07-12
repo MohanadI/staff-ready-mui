@@ -51,17 +51,17 @@ function LocationAddForm({ api }) {
                   <TreeSelection
                     label={"Within"}
                     api={api.subject.get}
-                    selectionType="subject"
+                    selectionType="location"
                     expandFirstNode={true}
                     customTopLevelData={{
                       value: "0",
-                      text: "Subject (top level)",
+                      text: "Locations (top level)",
                       type: null,
                     }}
                     validation={{ required: false }}
                   />
                 ),
-                name: "Subject",
+                name: "parentLocation",
                 validation: { required: false },
               },
               {
@@ -73,7 +73,7 @@ function LocationAddForm({ api }) {
                     size={"small"}
                   />
                 ),
-                name: "Location",
+                name: "id",
                 validation: { required: true },
               },
             ]}

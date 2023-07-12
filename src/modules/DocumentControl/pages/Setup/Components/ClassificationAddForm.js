@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import InputAdornment from "@mui/material/InputAdornment";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import withAPI from "../../../../../api/core";
@@ -22,31 +23,71 @@ const LoadingContainer = styled(Box)`
 
 /*
 department
-:
-{}
 departmentPk
-:
-null
 description
-:
-"asdasd"
 id
-:
-"fsfsd"
 name
-:
-"sdfsdfsdf"
 parentPk
-:
--2147481969
-
 */
 
 function ClassificationAddForm({ api }) {
   const formRef = useRef("");
-  const { setupPageData } = useContext(Context);
+  const { setupPageData, handleContextDataChange } = useContext(Context);
+  const [preIdentifier, setPreIdentifier] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [fields, setFields] = useState([
+  const [parent, setParent] = useState({});
+  const [showDepartment, setShowDepartment] = useState(false);
+
+  useEffect(() => {
+    loadParent();
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const loadParent = () => {
+    const currentNode = setupPageData?.selectedNode.value;
+    if (!currentNode) return;
+    setPreIdentifier(setupPageData?.selectedNode.text + " .");
+    api.classification.get_parent(
+      currentNode,
+      (result) => {
+        setParent(result);
+        if (!isEmpty(result.parent) && result.parent?.id !== "Documents") {
+          setShowDepartment(true);
+        } else {
+          setShowDepartment(false);
+        }
+      },
+      (error) => {
+        console.log("Error", error);
+      }
+    );
+  };
+
+  const save = async (data) => {
+    setIsLoading(true);
+    data.parentPk = parent.improvePk;
+    data.departmentPk = data.department?.value;
+    await api.subject.create_classification(
+      data,
+      () => {
+        console.log("success");
+        setTimeout(function () {
+          handleContextDataChange(false, "openAddModal");
+          handleContextDataChange(true, "reloadTreeData");
+        }, 2000);
+      },
+      () => {
+        console.log("error");
+      }
+    );
+    setIsLoading(false);
+  };
+
+  const fields = [
     {
       comp: (
         <TextField
@@ -54,6 +95,13 @@ function ClassificationAddForm({ api }) {
           label="Short Id"
           variant="outlined"
           size={"small"}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start" sx={{ fontSize: 13 }}>
+                {preIdentifier}
+              </InputAdornment>
+            ),
+          }}
         />
       ),
       name: "id",
@@ -79,59 +127,32 @@ function ClassificationAddForm({ api }) {
           label="Description"
           multiline
           rows={4}
-          defaultValue="Default Value"
         />
       ),
       name: "description",
       validation: { required: false },
     },
-  ]);
-
-  useEffect(() => {
-    loadParent();
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const loadParent = () => {
-    const currentNode = setupPageData?.selectedNode.value;
-    if (!currentNode) return;
-    api.classification.get_parent(
-      currentNode,
-      (result) => {
-        if (!isEmpty(result.parent) && result.parent?.id !== "Documents") {
-          setFields([
-            ...fields,
-            {
-              comp: (
-                <TreeSelection
-                  label={"Department"}
-                  api={api.classification.department}
-                  selectionType="department"
-                  expandFirstNode={true}
-                  customTopLevelData={{
-                    value: "0",
-                    text: "Department (top level)",
-                    type: null,
-                  }}
-                  validation={{ required: false }}
-                />
-              ),
-              name: "departmentPk",
-              validation: { required: false },
-            },
-          ]);
-        }
-      },
-      (error) => {
-        console.log("Error", error);
-      }
-    );
-  };
-
+  ];
+  if (showDepartment) {
+    fields.push({
+      comp: (
+        <TreeSelection
+          label={"Department"}
+          api={api.classification.department}
+          selectionType="department"
+          expandFirstNode={true}
+          customTopLevelData={{
+            value: "0",
+            text: "Department (top level)",
+            type: null,
+          }}
+          validation={{ required: false }}
+        />
+      ),
+      name: "department",
+      validation: { required: false },
+    });
+  }
   return (
     <>
       {isLoading ? (
@@ -139,11 +160,13 @@ function ClassificationAddForm({ api }) {
           <CircularProgress />
         </LoadingContainer>
       ) : (
-        <PerfectScrollbar style={{ padding: 15 }}>
-          <Typography variant="h5">Classification</Typography>
+        <PerfectScrollbar style={{ padding: 5 }}>
+          <Typography variant="h5" sx={{ marginBottom: 1 }}>
+            Classification
+          </Typography>
           <Form
             onSubmit={(formData) => {
-              console.log(formData);
+              save(formData);
             }}
             ref={formRef}
             colPerRow={1}

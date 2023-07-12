@@ -19,4 +19,8 @@ export const useClassificationAPI = (api, enabledAPIs) => {
         return api.get(url, callback, errorCallback);
     }
 
+    api.subject.create_classification = (payload, callback, errorCallback, params) => {
+        const url = `/StaffReady/v10/api/classification/save`;
+        return api.post(url, payload, callback, errorCallback, params);
+    };
 }

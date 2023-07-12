@@ -41,8 +41,10 @@ function DocumentAddForm({ api }) {
     await api.subject.create_document(
       data,
       () => {
-        handleContextDataChange(false, "openAddModal");
-        handleContextDataChange(true, "reloadTreeData");
+        setTimeout(function () {
+          handleContextDataChange(false, "openAddModal");
+          handleContextDataChange(true, "reloadTreeData");
+        }, 2000);
         console.log("success");
       },
       () => {
@@ -170,7 +172,6 @@ function DocumentAddForm({ api }) {
                     label="Description"
                     multiline
                     rows={4}
-                    defaultValue="Default Value"
                   />
                 ),
                 name: "description",

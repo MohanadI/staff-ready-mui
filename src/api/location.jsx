@@ -12,5 +12,10 @@ export const useLocationAPI = (api, enabledAPIs) => {
         return api.get(url, callback, errorCallback);
     }
 
+    api.location.create_location = (payload, callback, errorCallback, params) => {
+        const url = `/StaffReady/v10/api/location`;
+        return api.post(url, payload, callback, errorCallback, params);
+    };
+
 }
 
